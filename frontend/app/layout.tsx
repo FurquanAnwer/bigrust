@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Mono, Space_Grotesk } from "next/font/google";
 
+import { NavBar } from "@/components/NavBar";
+
 import "./globals.css";
 
 const spaceGrotesk = Space_Grotesk({
@@ -15,7 +17,7 @@ const ibmPlexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Rust Practice",
+  title: "BigRust - Practice Rust",
   description: "A minimal Rust coding practice app powered by Judge0."
 };
 
@@ -27,9 +29,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${spaceGrotesk.variable} ${ibmPlexMono.variable} font-sans`}>
+        <NavBar />
         {children}
       </body>
     </html>
   );
 }
-

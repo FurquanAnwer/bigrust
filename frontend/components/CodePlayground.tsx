@@ -64,7 +64,7 @@ export function CodePlayground({ problemTitle }: CodePlaygroundProps) {
   };
 
   return (
-    <section className="space-y-4 rounded-[2rem] border border-slate-200 bg-white/90 p-5 shadow-card">
+    <section className="space-y-4 rounded-lg border border-slate-200 bg-white p-5 shadow-card">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h2 className="text-xl font-semibold text-slate-900">Rust Editor</h2>
@@ -76,13 +76,13 @@ export function CodePlayground({ problemTitle }: CodePlaygroundProps) {
           type="button"
           onClick={runCode}
           disabled={isRunning}
-          className="inline-flex items-center justify-center rounded-full bg-orange-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-orange-500 disabled:cursor-not-allowed disabled:bg-orange-300"
+          className="inline-flex items-center justify-center rounded-lg bg-teal-700 px-5 py-3 text-sm font-semibold text-white transition hover:bg-teal-600 disabled:cursor-not-allowed disabled:bg-teal-300"
         >
           {isRunning ? "Running..." : "Run Code"}
         </button>
       </div>
 
-      <div className="overflow-hidden rounded-3xl border border-slate-200">
+      <div className="overflow-hidden rounded-lg border border-slate-200">
         <MonacoEditor
           height="420px"
           defaultLanguage="rust"
@@ -98,9 +98,9 @@ export function CodePlayground({ problemTitle }: CodePlaygroundProps) {
         />
       </div>
 
-      <div className="rounded-3xl bg-slate-950 p-4 font-mono text-sm text-slate-100">
+      <div className="rounded-lg bg-zinc-950 p-4 font-mono text-sm text-slate-100">
         <div className="mb-3 flex items-center justify-between">
-          <h3 className="text-xs uppercase tracking-[0.25em] text-slate-400">
+          <h3 className="text-xs uppercase text-slate-400">
             Output
           </h3>
           {isRunning ? (
@@ -116,7 +116,7 @@ export function CodePlayground({ problemTitle }: CodePlaygroundProps) {
           <div className="space-y-4">
             {result.stdout ? (
               <div>
-                <div className="mb-1 text-xs uppercase tracking-[0.2em] text-slate-500">
+                <div className="mb-1 text-xs uppercase text-slate-500">
                   Stdout
                 </div>
                 <pre className="whitespace-pre-wrap text-emerald-300">
@@ -127,7 +127,7 @@ export function CodePlayground({ problemTitle }: CodePlaygroundProps) {
 
             {result.stderr ? (
               <div>
-                <div className="mb-1 text-xs uppercase tracking-[0.2em] text-slate-500">
+                <div className="mb-1 text-xs uppercase text-slate-500">
                   Stderr
                 </div>
                 <pre className="whitespace-pre-wrap text-rose-300">
@@ -138,7 +138,7 @@ export function CodePlayground({ problemTitle }: CodePlaygroundProps) {
 
             {result.compile_output ? (
               <div>
-                <div className="mb-1 text-xs uppercase tracking-[0.2em] text-slate-500">
+                <div className="mb-1 text-xs uppercase text-slate-500">
                   Compile output
                 </div>
                 <pre className="whitespace-pre-wrap text-amber-300">
@@ -149,7 +149,7 @@ export function CodePlayground({ problemTitle }: CodePlaygroundProps) {
 
             {result.error ? (
               <div>
-                <div className="mb-1 text-xs uppercase tracking-[0.2em] text-slate-500">
+                <div className="mb-1 text-xs uppercase text-slate-500">
                   Error
                 </div>
                 <pre className="whitespace-pre-wrap text-rose-300">
@@ -171,4 +171,3 @@ export function CodePlayground({ problemTitle }: CodePlaygroundProps) {
     </section>
   );
 }
-
