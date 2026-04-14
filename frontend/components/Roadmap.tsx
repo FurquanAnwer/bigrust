@@ -86,7 +86,7 @@ export function Roadmap({ topics }: RoadmapProps) {
                 </Link>
                 <p className="mt-1 text-sm leading-6 text-slate-600">{topic.summary}</p>
                 <p className="mt-2 font-mono text-xs uppercase tracking-[0.2em] text-slate-400">
-                  {topic.count} coding questions + 5 MCQs
+                  {topic.count} coding questions + 40 MCQs
                 </p>
               </div>
 

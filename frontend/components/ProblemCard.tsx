@@ -28,23 +28,6 @@ export function ProblemCard({ problem }: ProblemCardProps) {
       <p className="mt-3 text-sm leading-6 text-slate-600">
         {problem.description}
       </p>
-
-      <div className="mt-5 grid gap-3 rounded-xl bg-zinc-950 p-4 font-mono text-sm text-slate-100 sm:grid-cols-2">
-        <div>
-          <div className="mb-1 text-xs uppercase text-slate-400">
-            Sample input
-          </div>
-          <pre className="whitespace-pre-wrap">{problem.sampleInput}</pre>
-        </div>
-        <div>
-          <div className="mb-1 text-xs uppercase text-slate-400">
-            Sample output
-          </div>
-          <pre className="whitespace-pre-wrap text-emerald-300">
-            {problem.sampleOutput}
-          </pre>
-        </div>
-      </div>
     </Link>
   );
 }

@@ -29,6 +29,16 @@ export default function McqsPage() {
             <div>
               <h2 className="text-xl font-semibold text-slate-950">{title}</h2>
               <p className="mt-1 text-sm leading-6 text-slate-600">{summary}</p>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {["Easy", "Medium", "Hard"].map((difficulty) => (
+                  <span
+                    key={difficulty}
+                    className="rounded-md bg-amber-50 px-3 py-1 font-mono text-xs text-amber-700"
+                  >
+                    {difficulty}
+                  </span>
+                ))}
+              </div>
             </div>
             <p className="font-mono text-xs uppercase tracking-[0.2em] text-slate-400">
               {count} {count === 1 ? "MCQ" : "MCQs"}
