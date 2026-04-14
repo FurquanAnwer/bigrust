@@ -1,0 +1,673 @@
+{
+  "problems": {
+    "rust-introduction": [
+      {
+        "id": "rust-introduction-interview-1",
+        "difficulty": "Easy",
+        "title": "Explain Rust From Program Output",
+        "description": "Write a Rust program that prints three short lines: what Rust is designed for, the command used to create a new project, and the file where main normally lives in a Cargo binary project.",
+        "sampleInput": "",
+        "sampleOutput": "Rust focuses on safety and performance\ncargo new creates a project\nsrc/main.rs contains main"
+      },
+      {
+        "id": "rust-introduction-interview-2",
+        "difficulty": "Easy",
+        "title": "Hello Candidate",
+        "description": "Read a candidate name from standard input and print a welcome line in the format used by many interview warm-ups. Trim surrounding whitespace before printing.",
+        "sampleInput": "Ferris\n",
+        "sampleOutput": "Hello, Ferris. Welcome to Rust."
+      },
+      {
+        "id": "rust-introduction-interview-3",
+        "difficulty": "Easy",
+        "title": "Cargo Command Classifier",
+        "description": "Read one Cargo command: build, run, test, or check. Print the main purpose of that command. Print unknown for any other command.",
+        "sampleInput": "check",
+        "sampleOutput": "check code without producing a final executable"
+      },
+      {
+        "id": "rust-introduction-interview-4",
+        "difficulty": "Easy",
+        "title": "Main Function Shape",
+        "description": "Print a minimal Rust main function exactly as three lines. This checks that you know the entry point shape before deeper syntax questions.",
+        "sampleInput": "",
+        "sampleOutput": "fn main() {\n    println!(\"Hello, world!\");\n}"
+      },
+      {
+        "id": "rust-introduction-interview-5",
+        "difficulty": "Medium",
+        "title": "Compiler Message Summary",
+        "description": "Read a single compiler status word: success, warning, or error. Print what a developer should do next in an interview setting.",
+        "sampleInput": "warning",
+        "sampleOutput": "read the warning and decide whether the code should be improved"
+      },
+      {
+        "id": "rust-introduction-interview-6",
+        "difficulty": "Medium",
+        "title": "Project File Router",
+        "description": "Read a filename and print whether it belongs to package metadata, binary source, library source, or another file. Handle Cargo.toml, src/main.rs, and src/lib.rs.",
+        "sampleInput": "Cargo.toml",
+        "sampleOutput": "package metadata"
+      },
+      {
+        "id": "rust-introduction-interview-7",
+        "difficulty": "Medium",
+        "title": "Rust Promise Checker",
+        "description": "Read three words and count how many are core Rust goals among safety, speed, concurrency, and productivity. Print the count.",
+        "sampleInput": "safety speed guessing",
+        "sampleOutput": "2"
+      },
+      {
+        "id": "rust-introduction-interview-8",
+        "difficulty": "Medium",
+        "title": "Toolchain Interview Answer",
+        "description": "Read a tool name: rustc, cargo, rustfmt, or clippy. Print a concise interview-ready explanation of what that tool does.",
+        "sampleInput": "clippy",
+        "sampleOutput": "clippy suggests idiomatic improvements and catches common mistakes"
+      },
+      {
+        "id": "rust-introduction-interview-9",
+        "difficulty": "Hard",
+        "title": "Build Step Planner",
+        "description": "Read a space-separated list of requested actions. Normalize aliases: compile means build, execute means run, verify means test. Print the unique Cargo commands in first-seen order.",
+        "sampleInput": "compile execute build verify",
+        "sampleOutput": "build run test"
+      },
+      {
+        "id": "rust-introduction-interview-10",
+        "difficulty": "Hard",
+        "title": "Interview Checklist Formatter",
+        "description": "Read a comma-separated list of Rust setup items. Trim each item, ignore empty entries, and print each valid item prefixed with a one-based checklist number.",
+        "sampleInput": "rustup, cargo, , rustfmt",
+        "sampleOutput": "1. rustup\n2. cargo\n3. rustfmt"
+      },
+      {
+        "id": "rust-introduction-interview-11",
+        "difficulty": "Hard",
+        "title": "Error-First Explanation",
+        "description": "Read a short compiler error category: syntax, type, borrow, or lifetime. Print one practical debugging step for that category. Unknown categories should print read the full diagnostic.",
+        "sampleInput": "type",
+        "sampleOutput": "compare the expected type with the value being provided"
+      },
+      {
+        "id": "rust-introduction-interview-12",
+        "difficulty": "Hard",
+        "title": "Cargo Output Parser",
+        "description": "Read lines of simplified Cargo output and count how many lines start with Compiling, Finished, and Running. Print the three counts in that order.",
+        "sampleInput": "Compiling app\nCompiling dep\nFinished dev\nRunning target/debug/app",
+        "sampleOutput": "compiling=2 finished=1 running=1"
+      }
+    ],
+    "variables": [
+      {
+        "id": "variables-interview-1",
+        "difficulty": "Easy",
+        "title": "Immutable Binding Trace",
+        "description": "Read an integer into an immutable binding named score and print it. The solution should not mark the binding as mutable.",
+        "sampleInput": "42",
+        "sampleOutput": "score=42"
+      },
+      {
+        "id": "variables-interview-2",
+        "difficulty": "Easy",
+        "title": "Make It Mutable",
+        "description": "Read two integers. Store the first in a mutable binding, add the second to it, and print the final value.",
+        "sampleInput": "10 5",
+        "sampleOutput": "15"
+      },
+      {
+        "id": "variables-interview-3",
+        "difficulty": "Easy",
+        "title": "Shadow A String Length",
+        "description": "Read one word into a String binding, then shadow the binding with its length. Print the length. Do not use a second variable name for the length.",
+        "sampleInput": "borrow",
+        "sampleOutput": "6"
+      },
+      {
+        "id": "variables-interview-4",
+        "difficulty": "Easy",
+        "title": "Constant Tax Rate",
+        "description": "Define a constant TAX_PERCENT with value 18. Read a base amount and print the tax amount using integer arithmetic.",
+        "sampleInput": "200",
+        "sampleOutput": "36"
+      },
+      {
+        "id": "variables-interview-5",
+        "difficulty": "Medium",
+        "title": "Shadow To Change Type",
+        "description": "Read a number as text, trim it, parse it as i32 by shadowing the original binding, double it, and print the result.",
+        "sampleInput": " 21 ",
+        "sampleOutput": "42"
+      },
+      {
+        "id": "variables-interview-6",
+        "difficulty": "Medium",
+        "title": "Mutability Audit",
+        "description": "Read variable declarations separated by commas. Count how many contain let mut and how many contain const. Print both counts.",
+        "sampleInput": "let x, let mut count, const LIMIT, let mut total",
+        "sampleOutput": "mutable=2 const=1"
+      },
+      {
+        "id": "variables-interview-7",
+        "difficulty": "Medium",
+        "title": "Swap Without Mutating Inputs",
+        "description": "Read two words into immutable bindings. Create a new tuple with the values reversed and print the reversed order.",
+        "sampleInput": "left right",
+        "sampleOutput": "right left"
+      },
+      {
+        "id": "variables-interview-8",
+        "difficulty": "Medium",
+        "title": "Scope Boundary Reporter",
+        "description": "Read an outer value and an inner value. Use an inner block that shadows the outer value, print the inner value inside the block, then print the original outer value after the block.",
+        "sampleInput": "outer inner",
+        "sampleOutput": "inside=inner\noutside=outer"
+      },
+      {
+        "id": "variables-interview-9",
+        "difficulty": "Hard",
+        "title": "Shadowing Pipeline",
+        "description": "Read a sentence. Shadow the binding three times: trimmed text, lowercase text, and word count. Print the final count.",
+        "sampleInput": "  Rust Makes Safety Practical  ",
+        "sampleOutput": "4"
+      },
+      {
+        "id": "variables-interview-10",
+        "difficulty": "Hard",
+        "title": "Immutable By Default Fix",
+        "description": "Read operations like start=10 add=5 add=7. Keep the original start value immutable, use a separate mutable running total, and print both the original and total.",
+        "sampleInput": "start=10 add=5 add=7",
+        "sampleOutput": "start=10 total=22"
+      },
+      {
+        "id": "variables-interview-11",
+        "difficulty": "Hard",
+        "title": "Type Annotation Gate",
+        "description": "Read tokens in the form name:type. Count how many variables have explicit integer types i32, u32, or usize. Print the count.",
+        "sampleInput": "age:i32 name:String index:usize active:bool",
+        "sampleOutput": "2"
+      },
+      {
+        "id": "variables-interview-12",
+        "difficulty": "Hard",
+        "title": "Binding Lifetime Story",
+        "description": "Read pairs in the form scope:name. Count how many names appear in both outer and inner scopes, showing that shadowing can reuse a name without mutating the original binding.",
+        "sampleInput": "outer:x inner:x outer:y inner:z",
+        "sampleOutput": "shadowed=1"
+      }
+    ],
+    "functions": [
+      {
+        "id": "functions-interview-1",
+        "difficulty": "Easy",
+        "title": "Write An Add Function",
+        "description": "Read two i32 values. Implement add(a: i32, b: i32) -> i32 and print the returned sum from main.",
+        "sampleInput": "8 13",
+        "sampleOutput": "21"
+      },
+      {
+        "id": "functions-interview-2",
+        "difficulty": "Easy",
+        "title": "Expression Return",
+        "description": "Read an integer. Implement square(n: i32) -> i32 using an expression return without a semicolon on the final expression.",
+        "sampleInput": "7",
+        "sampleOutput": "49"
+      },
+      {
+        "id": "functions-interview-3",
+        "difficulty": "Easy",
+        "title": "Boolean Helper",
+        "description": "Read an integer and call is_even(n: i32) -> bool. Print even when true and odd when false.",
+        "sampleInput": "12",
+        "sampleOutput": "even"
+      },
+      {
+        "id": "functions-interview-4",
+        "difficulty": "Easy",
+        "title": "Unit Return Logger",
+        "description": "Write a function print_status(status: &str) that returns unit and prints status=<value>. Call it from main using the input value.",
+        "sampleInput": "ready",
+        "sampleOutput": "status=ready"
+      },
+      {
+        "id": "functions-interview-5",
+        "difficulty": "Medium",
+        "title": "Parse Then Compute",
+        "description": "Implement parse_i32(text: &str) -> Option<i32> and triple(value: i32) -> i32. Read one token and print the tripled value or invalid.",
+        "sampleInput": "14",
+        "sampleOutput": "42"
+      },
+      {
+        "id": "functions-interview-6",
+        "difficulty": "Medium",
+        "title": "Borrowed String Formatter",
+        "description": "Implement label(name: &str, score: i32) -> String. Read a name and score, call the function without moving unnecessary data, and print the label.",
+        "sampleInput": "Ferris 99",
+        "sampleOutput": "Ferris scored 99"
+      },
+      {
+        "id": "functions-interview-7",
+        "difficulty": "Medium",
+        "title": "Tuple Return",
+        "description": "Implement min_max(a: i32, b: i32) -> (i32, i32). Read two integers and print min=<value> max=<value>.",
+        "sampleInput": "30 12",
+        "sampleOutput": "min=12 max=30"
+      },
+      {
+        "id": "functions-interview-8",
+        "difficulty": "Medium",
+        "title": "Early Return Guard",
+        "description": "Implement divide(a: i32, b: i32) -> Option<i32>. Return None when b is zero. Read two integers and print the quotient or division by zero.",
+        "sampleInput": "10 0",
+        "sampleOutput": "division by zero"
+      },
+      {
+        "id": "functions-interview-9",
+        "difficulty": "Hard",
+        "title": "Function Composition Pipeline",
+        "description": "Implement trim_input, normalize_case, and count_words as separate functions. Read a sentence, pass it through the pipeline, and print the word count.",
+        "sampleInput": "  RUST interviews reward clarity  ",
+        "sampleOutput": "4"
+      },
+      {
+        "id": "functions-interview-10",
+        "difficulty": "Hard",
+        "title": "Return Result From Validator",
+        "description": "Implement validate_port(text: &str) -> Result<u16, String>. Accept numbers from 1 through 65535. Print ok:<port> or err:<message>.",
+        "sampleInput": "70000",
+        "sampleOutput": "err:port out of range"
+      },
+      {
+        "id": "functions-interview-11",
+        "difficulty": "Hard",
+        "title": "Higher Order Calculator",
+        "description": "Implement apply(a: i32, b: i32, op: fn(i32, i32) -> i32) -> i32 with add and multiply functions. Read an operator word add or multiply and two numbers, then print the result.",
+        "sampleInput": "multiply 6 7",
+        "sampleOutput": "42"
+      },
+      {
+        "id": "functions-interview-12",
+        "difficulty": "Hard",
+        "title": "Small API Design",
+        "description": "Design three functions for a tiny cart: subtotal(prices: &[i32]) -> i32, discount(total: i32) -> i32, and payable(total: i32) -> i32. Apply a 10 percent discount when subtotal is at least 1000 and print the payable amount.",
+        "sampleInput": "400 600 200",
+        "sampleOutput": "1080"
+      }
+    ]
+  },
+  "mcqs": {
+    "rust-introduction": [
+      {
+        "id": "rust-introduction-mcq-interview-1",
+        "difficulty": "Easy",
+        "question": "In an interview, what is the clearest description of Rust's main value proposition?",
+        "options": [
+          "Memory safety without a garbage collector, plus strong performance",
+          "Dynamic typing with runtime ownership checks",
+          "A scripting language mainly for browser automation",
+          "A language that prevents all possible logic bugs"
+        ],
+        "answer": "Memory safety without a garbage collector, plus strong performance"
+      },
+      {
+        "id": "rust-introduction-mcq-interview-2",
+        "difficulty": "Easy",
+        "question": "Which command creates a new Rust package with Cargo?",
+        "options": ["cargo new app_name", "rustc new app_name", "cargo make app_name", "rustup project app_name"],
+        "answer": "cargo new app_name"
+      },
+      {
+        "id": "rust-introduction-mcq-interview-3",
+        "difficulty": "Easy",
+        "question": "Where is the entry point normally located in a new Cargo binary project?",
+        "options": ["src/main.rs", "main.toml", "Cargo.lock", "src/start.rs"],
+        "answer": "src/main.rs"
+      },
+      {
+        "id": "rust-introduction-mcq-interview-4",
+        "difficulty": "Easy",
+        "question": "What does println! indicate in Rust?",
+        "options": ["It is a macro call", "It is a struct constructor", "It is an async function", "It disables formatting checks"],
+        "answer": "It is a macro call"
+      },
+      {
+        "id": "rust-introduction-mcq-interview-5",
+        "difficulty": "Medium",
+        "question": "What is the best interview answer for the difference between rustc and Cargo?",
+        "options": [
+          "rustc compiles Rust code, while Cargo manages packages, builds, tests, and project workflows",
+          "Cargo is the compiler and rustc only formats code",
+          "rustc downloads crates and Cargo checks ownership",
+          "They are two names for exactly the same binary"
+        ],
+        "answer": "rustc compiles Rust code, while Cargo manages packages, builds, tests, and project workflows"
+      },
+      {
+        "id": "rust-introduction-mcq-interview-6",
+        "difficulty": "Medium",
+        "question": "Why does Rust catch many memory errors at compile time?",
+        "options": [
+          "The ownership and borrowing rules are checked before the program runs",
+          "All values are copied into global memory",
+          "The runtime garbage collector rejects invalid pointers",
+          "Cargo deletes unsafe functions automatically"
+        ],
+        "answer": "The ownership and borrowing rules are checked before the program runs"
+      },
+      {
+        "id": "rust-introduction-mcq-interview-7",
+        "difficulty": "Medium",
+        "question": "What does cargo check do?",
+        "options": [
+          "It type-checks and borrow-checks the project without producing the final executable",
+          "It runs the binary in release mode",
+          "It installs the Rust toolchain",
+          "It publishes the crate to crates.io"
+        ],
+        "answer": "It type-checks and borrow-checks the project without producing the final executable"
+      },
+      {
+        "id": "rust-introduction-mcq-interview-8",
+        "difficulty": "Medium",
+        "question": "What should you do first when a Rust compiler diagnostic is long?",
+        "options": [
+          "Read the primary error and the span it points to before changing code",
+          "Delete Cargo.lock immediately",
+          "Add unsafe to the whole file",
+          "Ignore it if the program looks correct"
+        ],
+        "answer": "Read the primary error and the span it points to before changing code"
+      },
+      {
+        "id": "rust-introduction-mcq-interview-9",
+        "difficulty": "Hard",
+        "question": "Which statement best explains zero-cost abstractions in Rust?",
+        "options": [
+          "High-level constructs are designed to compile to code without unnecessary runtime overhead",
+          "Every abstraction is free to allocate at runtime",
+          "Rust removes all CPU costs from function calls",
+          "Cargo optimizes only code that uses macros"
+        ],
+        "answer": "High-level constructs are designed to compile to code without unnecessary runtime overhead"
+      },
+      {
+        "id": "rust-introduction-mcq-interview-10",
+        "difficulty": "Hard",
+        "question": "Why is Rust often chosen for systems programming interviews?",
+        "options": [
+          "It exposes low-level control while enforcing strong safety rules",
+          "It hides all memory layout and pointer concepts",
+          "It has no type system questions",
+          "It only runs inside managed runtimes"
+        ],
+        "answer": "It exposes low-level control while enforcing strong safety rules"
+      },
+      {
+        "id": "rust-introduction-mcq-interview-11",
+        "difficulty": "Hard",
+        "question": "What is a precise reason Cargo.lock is committed for applications but often not for libraries?",
+        "options": [
+          "Applications usually want reproducible dependency versions, while libraries should allow compatible versions for downstream users",
+          "Libraries cannot compile when Cargo.lock exists",
+          "Applications do not use semantic versioning",
+          "Cargo.lock contains source code for all crates"
+        ],
+        "answer": "Applications usually want reproducible dependency versions, while libraries should allow compatible versions for downstream users"
+      },
+      {
+        "id": "rust-introduction-mcq-interview-12",
+        "difficulty": "Hard",
+        "question": "If an interviewer asks why Rust has a learning curve, which answer is strongest?",
+        "options": [
+          "Rust asks developers to model ownership, borrowing, lifetimes, and types explicitly so errors are caught earlier",
+          "Rust syntax changes every time the compiler runs",
+          "Rust has no standard library",
+          "Rust requires manual memory management for every allocation"
+        ],
+        "answer": "Rust asks developers to model ownership, borrowing, lifetimes, and types explicitly so errors are caught earlier"
+      }
+    ],
+    "variables": [
+      {
+        "id": "variables-mcq-interview-1",
+        "difficulty": "Easy",
+        "question": "What is the default mutability of a Rust binding created with let?",
+        "options": ["Immutable", "Mutable", "Global", "Thread-local"],
+        "answer": "Immutable"
+      },
+      {
+        "id": "variables-mcq-interview-2",
+        "difficulty": "Easy",
+        "question": "Which declaration allows reassignment to x?",
+        "options": ["let mut x = 5;", "let x mut = 5;", "mut let x = 5;", "const mut x = 5;"],
+        "answer": "let mut x = 5;"
+      },
+      {
+        "id": "variables-mcq-interview-3",
+        "difficulty": "Easy",
+        "question": "What is shadowing in Rust?",
+        "options": [
+          "Declaring a new binding with the same name as an earlier binding",
+          "Changing an immutable binding without let",
+          "Making a variable visible in every module",
+          "Deleting a value before it is used"
+        ],
+        "answer": "Declaring a new binding with the same name as an earlier binding"
+      },
+      {
+        "id": "variables-mcq-interview-4",
+        "difficulty": "Easy",
+        "question": "Which keyword defines a compile-time constant?",
+        "options": ["const", "let", "static mut only", "final"],
+        "answer": "const"
+      },
+      {
+        "id": "variables-mcq-interview-5",
+        "difficulty": "Medium",
+        "question": "Why can shadowing change a value's type while mutation cannot?",
+        "options": [
+          "Shadowing creates a new binding, while mutation updates the existing binding whose type is fixed",
+          "Mutation always creates a new variable",
+          "Shadowing disables the type checker",
+          "Only constants can change type"
+        ],
+        "answer": "Shadowing creates a new binding, while mutation updates the existing binding whose type is fixed"
+      },
+      {
+        "id": "variables-mcq-interview-6",
+        "difficulty": "Medium",
+        "question": "What happens after let x = 5; let x = x + 1;?",
+        "options": [
+          "The second x shadows the first and has value 6",
+          "The code fails because x is immutable",
+          "The first x is mutated in place",
+          "The type of x becomes Option<i32>"
+        ],
+        "answer": "The second x shadows the first and has value 6"
+      },
+      {
+        "id": "variables-mcq-interview-7",
+        "difficulty": "Medium",
+        "question": "Which statement about constants is true?",
+        "options": [
+          "Constants require a type annotation",
+          "Constants can be assigned only inside main",
+          "Constants are mutable when declared uppercase",
+          "Constants can store values computed from runtime input"
+        ],
+        "answer": "Constants require a type annotation"
+      },
+      {
+        "id": "variables-mcq-interview-8",
+        "difficulty": "Medium",
+        "question": "Why does Rust encourage immutability by default?",
+        "options": [
+          "It makes data flow easier to reason about and prevents accidental changes",
+          "It makes every program single-threaded",
+          "It removes the need for ownership",
+          "It forces all values onto the heap"
+        ],
+        "answer": "It makes data flow easier to reason about and prevents accidental changes"
+      },
+      {
+        "id": "variables-mcq-interview-9",
+        "difficulty": "Hard",
+        "question": "What is the output of this idea: let spaces = \"   \"; let spaces = spaces.len(); print spaces?",
+        "options": ["3", "Compilation fails because spaces was immutable", "0", "A string containing three spaces"],
+        "answer": "3"
+      },
+      {
+        "id": "variables-mcq-interview-10",
+        "difficulty": "Hard",
+        "question": "Which interview answer best distinguishes const from let?",
+        "options": [
+          "const names a value known at compile time and requires a type; let creates a runtime binding and can infer its type",
+          "const is always heap allocated and let is always stack allocated",
+          "let is global and const is local",
+          "const values can be reassigned with mut"
+        ],
+        "answer": "const names a value known at compile time and requires a type; let creates a runtime binding and can infer its type"
+      },
+      {
+        "id": "variables-mcq-interview-11",
+        "difficulty": "Hard",
+        "question": "Inside an inner block, let x = \"inner\"; shadows an outer x. What happens when the block ends?",
+        "options": [
+          "The inner binding goes out of scope and the outer binding is visible again",
+          "The outer binding is permanently overwritten",
+          "Both bindings become mutable",
+          "Rust keeps both visible and requires x[0]"
+        ],
+        "answer": "The inner binding goes out of scope and the outer binding is visible again"
+      },
+      {
+        "id": "variables-mcq-interview-12",
+        "difficulty": "Hard",
+        "question": "Which code style is most idiomatic when a value only changes during construction?",
+        "options": [
+          "Use shadowing or a final immutable binding after construction",
+          "Keep it mutable for the whole function",
+          "Use a global mutable static",
+          "Store every intermediate value as a String"
+        ],
+        "answer": "Use shadowing or a final immutable binding after construction"
+      }
+    ],
+    "functions": [
+      {
+        "id": "functions-mcq-interview-1",
+        "difficulty": "Easy",
+        "question": "Which syntax declares a function that takes two i32 values and returns i32?",
+        "options": ["fn add(a: i32, b: i32) -> i32", "function add(a: i32, b: i32): i32", "fn add(i32 a, i32 b) => i32", "let add(a, b) -> i32"],
+        "answer": "fn add(a: i32, b: i32) -> i32"
+      },
+      {
+        "id": "functions-mcq-interview-2",
+        "difficulty": "Easy",
+        "question": "What does a semicolon do to the final expression of a Rust function body?",
+        "options": [
+          "It turns the expression into a statement, so it no longer returns that value",
+          "It makes the function async",
+          "It converts the value to String",
+          "It makes the value mutable"
+        ],
+        "answer": "It turns the expression into a statement, so it no longer returns that value"
+      },
+      {
+        "id": "functions-mcq-interview-3",
+        "difficulty": "Easy",
+        "question": "What is the return type of a function that does not explicitly return a value?",
+        "options": ["()", "None", "void", "Never"],
+        "answer": "()"
+      },
+      {
+        "id": "functions-mcq-interview-4",
+        "difficulty": "Easy",
+        "question": "Where can Rust functions be defined?",
+        "options": ["Before or after the function that calls them", "Only above main", "Only inside structs", "Only in Cargo.toml"],
+        "answer": "Before or after the function that calls them"
+      },
+      {
+        "id": "functions-mcq-interview-5",
+        "difficulty": "Medium",
+        "question": "Why are parameter types required in Rust function signatures?",
+        "options": [
+          "They make function boundaries explicit and support static type checking",
+          "Rust cannot infer any local variable types",
+          "They are needed only for documentation",
+          "They tell Cargo which crate to download"
+        ],
+        "answer": "They make function boundaries explicit and support static type checking"
+      },
+      {
+        "id": "functions-mcq-interview-6",
+        "difficulty": "Medium",
+        "question": "Which function body correctly returns x + 1 as an i32?",
+        "options": ["{ x + 1 }", "{ x + 1; }", "{ return; x + 1 }", "{ let x + 1 }"],
+        "answer": "{ x + 1 }"
+      },
+      {
+        "id": "functions-mcq-interview-7",
+        "difficulty": "Medium",
+        "question": "When should a function take &str instead of String in many interview examples?",
+        "options": [
+          "When it only needs to read text and should not take ownership",
+          "When it needs to mutate the caller's string",
+          "When it must store text forever",
+          "When it needs to avoid UTF-8"
+        ],
+        "answer": "When it only needs to read text and should not take ownership"
+      },
+      {
+        "id": "functions-mcq-interview-8",
+        "difficulty": "Medium",
+        "question": "Which return type is best for a function that may fail to parse an integer without explaining why?",
+        "options": ["Option<i32>", "i32", "String", "()"],
+        "answer": "Option<i32>"
+      },
+      {
+        "id": "functions-mcq-interview-9",
+        "difficulty": "Hard",
+        "question": "Which answer best explains early return in Rust?",
+        "options": [
+          "return can exit a function before the final expression, but idiomatic code often uses expressions when simple",
+          "return is required for every successful function result",
+          "return can only be used in main",
+          "return disables borrow checking for the function"
+        ],
+        "answer": "return can exit a function before the final expression, but idiomatic code often uses expressions when simple"
+      },
+      {
+        "id": "functions-mcq-interview-10",
+        "difficulty": "Hard",
+        "question": "What does fn(i32, i32) -> i32 represent as a parameter type?",
+        "options": [
+          "A function pointer accepting two i32 values and returning i32",
+          "A closure that captures any local variable",
+          "A trait object for all functions",
+          "A tuple containing two integers and one result"
+        ],
+        "answer": "A function pointer accepting two i32 values and returning i32"
+      },
+      {
+        "id": "functions-mcq-interview-11",
+        "difficulty": "Hard",
+        "question": "Why should a reusable helper avoid printing when its job is to compute a value?",
+        "options": [
+          "Returning the value keeps the function easier to test and compose",
+          "Rust functions are not allowed to print",
+          "Printing makes the value mutable",
+          "Only main can return values"
+        ],
+        "answer": "Returning the value keeps the function easier to test and compose"
+      },
+      {
+        "id": "functions-mcq-interview-12",
+        "difficulty": "Hard",
+        "question": "Which function signature is most appropriate for validating input with an error message?",
+        "options": ["fn validate(text: &str) -> Result<u16, String>", "fn validate(text: String) -> bool", "fn validate() -> ()", "fn validate(text: &str) -> u16"],
+        "answer": "fn validate(text: &str) -> Result<u16, String>"
+      }
+    ]
+  }
+}

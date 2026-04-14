@@ -16,8 +16,8 @@ export default function TopicsPage() {
           </h1>
           <p className="mt-5 text-lg leading-8 text-slate-600">
             Move through the topics in order, open a topic when you are ready,
-            and mark progress as you go. Each stop has 40 coding questions and
-            40 MCQs labeled by difficulty.
+            and mark progress as you go. Each stop has coding questions and
+            MCQs labeled by difficulty.
           </p>
         </div>
 

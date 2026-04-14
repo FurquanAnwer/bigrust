@@ -4,6 +4,7 @@ import {
   type Topic,
   topics
 } from "@/lib/topics";
+import interviewQuestions from "../../shared/interviewQuestions.json";
 
 export type Mcq = {
   id: string;
@@ -31,6 +32,18 @@ const difficultyPattern: Difficulty[] = Array.from(
 );
 
 function buildMcqSet(topic: (typeof roadmapTopics)[number]): Mcq[] {
+  const interviewMcqs =
+    interviewQuestions.mcqs[topic.slug as keyof typeof interviewQuestions.mcqs];
+
+  if (interviewMcqs) {
+    return interviewMcqs.map((mcq) => ({
+      ...mcq,
+      topic: topic.slug,
+      topicTitle: topic.title,
+      difficulty: mcq.difficulty as Difficulty
+    }));
+  }
+
   const questions = [
     {
       question: `What should you focus on first when learning ${topic.title}?`,

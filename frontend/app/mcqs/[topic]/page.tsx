@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { McqCard } from "@/components/McqCard";
-import { getMcqsByTopic } from "@/lib/mcqs";
+import { getBackendMcqsByTopic } from "@/lib/backendQuestions";
 import { topics } from "@/lib/problems";
 import { getTopicBySlug } from "@/lib/topics";
 
@@ -19,7 +19,7 @@ export default async function McqTopicPage({ params }: McqTopicPageProps) {
     notFound();
   }
 
-  const topicMcqs = getMcqsByTopic(topic);
+  const topicMcqs = await getBackendMcqsByTopic(topic);
   const topicDetails = getTopicBySlug(topic);
 
   return (
@@ -36,8 +36,8 @@ export default async function McqTopicPage({ params }: McqTopicPageProps) {
           {topicDetails?.title} MCQs
         </h1>
         <p className="mt-4 text-lg leading-8 text-slate-600">
-          Practice {topicDetails?.title} with 40 focused multiple choice
-          questions, labeled from easy to hard.
+          Practice {topicDetails?.title} with focused interview-style multiple
+          choice questions, labeled from easy to hard.
         </p>
       </section>
 

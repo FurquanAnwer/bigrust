@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { CodePlayground } from "@/components/CodePlayground";
-import { getProblemById } from "@/lib/problems";
+import { getBackendProblemById } from "@/lib/backendQuestions";
 
 type ProblemPageProps = {
   params: Promise<{
@@ -12,7 +12,7 @@ type ProblemPageProps = {
 
 export default async function ProblemPage({ params }: ProblemPageProps) {
   const { id } = await params;
-  const problem = getProblemById(id);
+  const problem = await getBackendProblemById(id);
 
   if (!problem) {
     notFound();

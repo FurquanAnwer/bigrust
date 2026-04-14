@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { McqPracticeList } from "@/components/McqPracticeList";
-import { getMcqsByTopic } from "@/lib/mcqs";
+import { getBackendMcqsByTopic } from "@/lib/backendQuestions";
 import { topics } from "@/lib/problems";
 import { getTopicBySlug } from "@/lib/topics";
 
@@ -20,7 +20,7 @@ export default async function TopicMcqsPage({ params }: TopicMcqsPageProps) {
   }
 
   const topicDetails = getTopicBySlug(topic);
-  const topicMcqs = getMcqsByTopic(topic);
+  const topicMcqs = await getBackendMcqsByTopic(topic);
 
   return (
     <main className="mx-auto max-w-6xl px-6 py-10 sm:px-8">
@@ -39,8 +39,8 @@ export default async function TopicMcqsPage({ params }: TopicMcqsPageProps) {
           {topicDetails?.title} MCQs
         </h1>
         <p className="mt-4 text-lg leading-8 text-slate-600">
-          Answer the 40 multiple-choice questions below and reveal answers
-          when you are ready to check your understanding.
+          Answer the interview-style multiple-choice questions below and
+          reveal answers when you are ready to check your understanding.
         </p>
       </section>
 

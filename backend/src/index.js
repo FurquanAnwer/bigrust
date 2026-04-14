@@ -1,6 +1,8 @@
 import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
+import { readFileSync } from "node:fs";
+import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 dotenv.config();
@@ -8,12 +10,60 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 4000;
 const judge0ApiUrl = process.env.JUDGE0_API_URL || "https://ce.judge0.com";
+const currentFilePath = fileURLToPath(import.meta.url);
+const currentDir = dirname(currentFilePath);
+const questionBankPath = resolve(
+  currentDir,
+  "../../shared/interviewQuestions.json"
+);
+const questionBank = JSON.parse(readFileSync(questionBankPath, "utf8"));
 
 app.use(cors());
 app.use(express.json({ limit: "1mb" }));
 
 app.get("/health", (_req, res) => {
   res.json({ ok: true });
+});
+
+app.get("/topics/:topic/problems", (req, res) => {
+  const problems = questionBank.problems?.[req.params.topic];
+
+  if (!problems) {
+    return res.status(404).json({
+      error: "No interview coding problems found for this topic yet."
+    });
+  }
+
+  return res.json({ problems });
+});
+
+app.get("/topics/:topic/mcqs", (req, res) => {
+  const mcqs = questionBank.mcqs?.[req.params.topic];
+
+  if (!mcqs) {
+    return res.status(404).json({
+      error: "No interview MCQs found for this topic yet."
+    });
+  }
+
+  return res.json({ mcqs });
+});
+
+app.get("/problems/:id", (req, res) => {
+  const problemEntry = Object.entries(questionBank.problems ?? {}).find(
+    ([, problems]) => problems.some((item) => item.id === req.params.id)
+  );
+
+  if (!problemEntry) {
+    return res.status(404).json({
+      error: "Problem not found."
+    });
+  }
+
+  const [topic, problems] = problemEntry;
+  const problem = problems.find((item) => item.id === req.params.id);
+
+  return res.json({ problem, topic });
 });
 
 app.post("/run", async (req, res) => {
@@ -74,8 +124,6 @@ app.post("/run", async (req, res) => {
     });
   }
 });
-
-const currentFilePath = fileURLToPath(import.meta.url);
 
 if (process.argv[1] === currentFilePath) {
   app.listen(port, () => {

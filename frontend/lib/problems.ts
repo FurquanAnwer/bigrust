@@ -5,6 +5,7 @@ import {
   type Topic,
   topics
 } from "@/lib/topics";
+import interviewQuestions from "../../shared/interviewQuestions.json";
 
 export type Problem = {
   id: string;
@@ -37,6 +38,18 @@ export const defaultRustCode = `fn main() {
 }`;
 
 function buildProblemSet(topic: (typeof roadmapTopics)[number]): Problem[] {
+  const interviewProblems =
+    interviewQuestions.problems[topic.slug as keyof typeof interviewQuestions.problems];
+
+  if (interviewProblems) {
+    return interviewProblems.map((problem) => ({
+      ...problem,
+      topic: topic.slug,
+      topicTitle: topic.title,
+      difficulty: problem.difficulty as Difficulty
+    }));
+  }
+
   const prompts = [
     {
       title: `${topic.title} Warm-up`,

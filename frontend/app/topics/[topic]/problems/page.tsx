@@ -2,7 +2,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { ProblemPracticeList } from "@/components/ProblemPracticeList";
-import { getProblemsByTopic, topics } from "@/lib/problems";
+import { getBackendProblemsByTopic } from "@/lib/backendQuestions";
+import { topics } from "@/lib/problems";
 import { getTopicBySlug } from "@/lib/topics";
 
 type TopicProblemsPageProps = {
@@ -19,7 +20,7 @@ export default async function TopicProblemsPage({ params }: TopicProblemsPagePro
   }
 
   const topicDetails = getTopicBySlug(topic);
-  const topicProblems = getProblemsByTopic(topic);
+  const topicProblems = await getBackendProblemsByTopic(topic);
 
   return (
     <main className="mx-auto max-w-6xl px-6 py-10 sm:px-8">
@@ -38,8 +39,8 @@ export default async function TopicProblemsPage({ params }: TopicProblemsPagePro
           {topicDetails?.title} coding problems
         </h1>
         <p className="mt-4 text-lg leading-8 text-slate-600">
-          Choose one of the 40 problems below to open its individual
-          playground and solve it.
+          Choose one of the interview-style problems below to open its
+          individual playground and solve it.
         </p>
       </section>
 
