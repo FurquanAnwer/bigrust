@@ -10,13 +10,16 @@ export function ProblemCard({ problem }: ProblemCardProps) {
   return (
     <Link
       href={`/problems/${problem.id}`}
-      className="group rounded-lg border border-slate-200 bg-white p-5 shadow-card transition hover:-translate-y-0.5 hover:border-teal-300"
+      className="group block rounded-2xl border border-slate-200 bg-white p-5 shadow-card transition hover:-translate-y-0.5 hover:border-teal-300"
     >
-      <div className="mb-4 flex items-center justify-between gap-4">
+      <div className="mb-4 flex flex-wrap items-center gap-3">
         <span className="rounded-md bg-teal-50 px-3 py-1 font-mono text-xs text-teal-700">
-          {problem.topic}
+          {problem.topicTitle}
         </span>
-        <span className="text-sm text-slate-500 transition group-hover:text-teal-700">
+        <span className="rounded-md bg-amber-50 px-3 py-1 font-mono text-xs text-amber-700">
+          {problem.difficulty}
+        </span>
+        <span className="ml-auto text-sm text-slate-500 transition group-hover:text-teal-700">
           Open problem
         </span>
       </div>
@@ -26,7 +29,7 @@ export function ProblemCard({ problem }: ProblemCardProps) {
         {problem.description}
       </p>
 
-      <div className="mt-5 grid gap-3 rounded-lg bg-zinc-950 p-4 font-mono text-sm text-slate-100">
+      <div className="mt-5 grid gap-3 rounded-xl bg-zinc-950 p-4 font-mono text-sm text-slate-100 sm:grid-cols-2">
         <div>
           <div className="mb-1 text-xs uppercase text-slate-400">
             Sample input

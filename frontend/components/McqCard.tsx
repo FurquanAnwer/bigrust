@@ -10,7 +10,10 @@ export function McqCard({ mcq, index }: McqCardProps) {
     <article className="rounded-lg border border-slate-200 bg-white p-5 shadow-card">
       <div className="mb-4 flex flex-wrap items-center gap-3">
         <span className="rounded-md bg-teal-50 px-3 py-1 font-mono text-xs text-teal-700">
-          {mcq.topic}
+          {mcq.topicTitle}
+        </span>
+        <span className="rounded-md bg-amber-50 px-3 py-1 font-mono text-xs text-amber-700">
+          {mcq.difficulty}
         </span>
         <span className="text-sm text-slate-500">Question {index + 1}</span>
       </div>
