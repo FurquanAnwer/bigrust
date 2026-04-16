@@ -9,7 +9,7 @@ export default function HomePage() {
             BigRust
           </p>
           <h1 className="mt-5 max-w-4xl text-5xl font-bold tracking-tight sm:text-7xl">
-            Learn Rust through a focused practice roadmap.
+            Learn Rust through a focused practice roadmap!
           </h1>
           <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-300">
             BigRust helps you move from Rust basics to advanced topics with a
