@@ -18,7 +18,7 @@ export function McqCard({ mcq, index }: McqCardProps) {
         <span className="text-sm text-slate-500">Question {index + 1}</span>
       </div>
 
-      <h2 className="text-lg font-semibold leading-7 text-slate-950">
+      <h2 className="whitespace-pre-wrap text-lg font-semibold leading-7 text-slate-950">
         {mcq.question}
       </h2>
 
@@ -35,7 +35,7 @@ export function McqCard({ mcq, index }: McqCardProps) {
 
       <details className="mt-4 rounded-lg border border-teal-100 bg-teal-50 px-4 py-3 text-sm text-teal-900">
         <summary className="cursor-pointer font-semibold">Show answer</summary>
-        <p className="mt-2">{mcq.answer}</p>
+        <p className="mt-2 whitespace-pre-wrap">{mcq.answer}</p>
       </details>
     </article>
   );
