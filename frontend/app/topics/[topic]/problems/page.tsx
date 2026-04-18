@@ -2,7 +2,6 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { ProblemPracticeList } from "@/components/ProblemPracticeList";
-import { getBackendProblemsByTopic } from "@/lib/backendQuestions";
 import { topics } from "@/lib/problems";
 import { getTopicBySlug } from "@/lib/topics";
 
@@ -20,7 +19,6 @@ export default async function TopicProblemsPage({ params }: TopicProblemsPagePro
   }
 
   const topicDetails = getTopicBySlug(topic);
-  const topicProblems = await getBackendProblemsByTopic(topic);
 
   return (
     <main className="mx-auto max-w-6xl px-6 py-10 sm:px-8">
@@ -44,7 +42,7 @@ export default async function TopicProblemsPage({ params }: TopicProblemsPagePro
         </p>
       </section>
 
-      <ProblemPracticeList problems={topicProblems} />
+      <ProblemPracticeList topic={topic} />
     </main>
   );
 }

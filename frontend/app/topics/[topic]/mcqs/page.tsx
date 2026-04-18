@@ -2,7 +2,6 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { McqPracticeList } from "@/components/McqPracticeList";
-import { getBackendMcqsByTopic } from "@/lib/backendQuestions";
 import { topics } from "@/lib/problems";
 import { getTopicBySlug } from "@/lib/topics";
 
@@ -20,7 +19,6 @@ export default async function TopicMcqsPage({ params }: TopicMcqsPageProps) {
   }
 
   const topicDetails = getTopicBySlug(topic);
-  const topicMcqs = await getBackendMcqsByTopic(topic);
 
   return (
     <main className="mx-auto max-w-6xl px-6 py-10 sm:px-8">
@@ -44,7 +42,7 @@ export default async function TopicMcqsPage({ params }: TopicMcqsPageProps) {
         </p>
       </section>
 
-      <McqPracticeList mcqs={topicMcqs} />
+      <McqPracticeList topic={topic} />
     </main>
   );
 }

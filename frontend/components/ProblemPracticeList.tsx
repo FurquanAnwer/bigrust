@@ -3,11 +3,13 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
+import { QuestionLoading } from "@/components/QuestionLoading";
+import { getBackendProblemsByTopic } from "@/lib/backendQuestions";
 import type { Problem } from "@/lib/problems";
 import type { Difficulty } from "@/lib/topics";
 
 type ProblemPracticeListProps = {
-  problems: Problem[];
+  topic: string;
 };
 
 type DifficultyFilter = "All" | Difficulty;
@@ -15,9 +17,47 @@ type DifficultyFilter = "All" | Difficulty;
 const difficultyFilters: DifficultyFilter[] = ["All", "Easy", "Medium", "Hard"];
 const storageKey = "bigrust-solved-problems";
 
-export function ProblemPracticeList({ problems }: ProblemPracticeListProps) {
+export function ProblemPracticeList({ topic }: ProblemPracticeListProps) {
   const [activeFilter, setActiveFilter] = useState<DifficultyFilter>("All");
+  const [problems, setProblems] = useState<Problem[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [solvedProblemIds, setSolvedProblemIds] = useState<string[]>([]);
+
+  useEffect(() => {
+    let isCurrent = true;
+
+    async function loadProblems() {
+      setIsLoading(true);
+      setError(null);
+
+      try {
+        const nextProblems = await getBackendProblemsByTopic(topic);
+
+        if (isCurrent) {
+          setProblems(nextProblems);
+        }
+      } catch (loadError) {
+        if (isCurrent) {
+          setError(
+            loadError instanceof Error
+              ? loadError.message
+              : "Unable to load coding questions."
+          );
+        }
+      } finally {
+        if (isCurrent) {
+          setIsLoading(false);
+        }
+      }
+    }
+
+    loadProblems();
+
+    return () => {
+      isCurrent = false;
+    };
+  }, [topic]);
 
   useEffect(() => {
     const savedProgress = window.localStorage.getItem(storageKey);
@@ -50,6 +90,21 @@ export function ProblemPracticeList({ problems }: ProblemPracticeListProps) {
     solvedProblemIds.includes(problem.id)
   ).length;
 
+  if (isLoading) {
+    return <QuestionLoading label="Loading coding questions..." />;
+  }
+
+  if (error) {
+    return (
+      <section className="rounded-lg border border-rose-200 bg-white p-5 shadow-card">
+        <p className="text-sm font-semibold text-rose-700">
+          Coding questions could not be loaded.
+        </p>
+        <p className="mt-2 text-sm text-slate-600">{error}</p>
+      </section>
+    );
+  }
+
   return (
     <section className="space-y-5">
       <div className="flex flex-col gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-card sm:flex-row sm:items-center sm:justify-between">
@@ -81,6 +136,12 @@ export function ProblemPracticeList({ problems }: ProblemPracticeListProps) {
       </div>
 
       <div className="space-y-5">
+        {filteredProblems.length === 0 ? (
+          <article className="rounded-lg border border-slate-200 bg-white p-5 text-sm text-slate-600 shadow-card">
+            No coding questions match this filter yet.
+          </article>
+        ) : null}
+
         {filteredProblems.map((problem) => {
           const isSolved = solvedProblemIds.includes(problem.id);
 

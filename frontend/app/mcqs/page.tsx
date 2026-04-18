@@ -1,10 +1,6 @@
-import Link from "next/link";
-
-import { getMcqTopicSummaries } from "@/lib/mcqs";
+import { McqTopicList } from "@/components/McqTopicList";
 
 export default function McqsPage() {
-  const topicSummaries = getMcqTopicSummaries();
-
   return (
     <main className="mx-auto max-w-6xl px-6 py-10 sm:px-8">
       <section className="mb-10 max-w-3xl">
@@ -16,36 +12,7 @@ export default function McqsPage() {
         </p>
       </section>
 
-      <section className="space-y-4">
-        {topicSummaries.map(({ slug, title, summary, count }, index) => (
-          <Link
-            key={slug}
-            href={`/mcqs/${slug}`}
-            className="grid gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-card transition hover:-translate-y-0.5 hover:border-teal-300 sm:grid-cols-[auto_minmax(0,1fr)_auto] sm:items-center"
-          >
-            <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-teal-50 font-mono text-sm font-semibold text-teal-700">
-              {String(index + 1).padStart(2, "0")}
-            </span>
-            <div>
-              <h2 className="text-xl font-semibold text-slate-950">{title}</h2>
-              <p className="mt-1 text-sm leading-6 text-slate-600">{summary}</p>
-              <div className="mt-3 flex flex-wrap gap-2">
-                {["Easy", "Medium", "Hard"].map((difficulty) => (
-                  <span
-                    key={difficulty}
-                    className="rounded-md bg-amber-50 px-3 py-1 font-mono text-xs text-amber-700"
-                  >
-                    {difficulty}
-                  </span>
-                ))}
-              </div>
-            </div>
-            <p className="font-mono text-xs uppercase tracking-[0.2em] text-slate-400">
-              {count} {count === 1 ? "MCQ" : "MCQs"}
-            </p>
-          </Link>
-        ))}
-      </section>
+      <McqTopicList />
     </main>
   );
 }

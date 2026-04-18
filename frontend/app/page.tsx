@@ -2,181 +2,231 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
+
 import { MacbookScroll } from "@/components/ui/macbook-scroll";
+
+const laptopScreen = `data:image/svg+xml,${encodeURIComponent(`
+<svg width="960" height="720" viewBox="0 0 960 720" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="960" height="720" fill="#050505"/>
+  <rect x="48" y="42" width="864" height="60" rx="8" fill="#141414"/>
+  <circle cx="78" cy="72" r="7" fill="#ef4444"/>
+  <circle cx="102" cy="72" r="7" fill="#f59e0b"/>
+  <circle cx="126" cy="72" r="7" fill="#10b981"/>
+  <rect x="168" y="62" width="244" height="20" rx="4" fill="#262626"/>
+  <rect x="48" y="130" width="240" height="512" rx="8" fill="#0f0f0f"/>
+  <rect x="318" y="130" width="594" height="512" rx="8" fill="#0b0b0b"/>
+  <text x="78" y="180" fill="#5eead4" font-family="monospace" font-size="22" font-weight="700">BigRust</text>
+  <text x="78" y="230" fill="#f5f5f5" font-family="monospace" font-size="18">01  ownership</text>
+  <text x="78" y="270" fill="#a3a3a3" font-family="monospace" font-size="18">02  borrowing</text>
+  <text x="78" y="310" fill="#a3a3a3" font-family="monospace" font-size="18">03  lifetimes</text>
+  <text x="78" y="350" fill="#fbbf24" font-family="monospace" font-size="18">04  traits</text>
+  <rect x="348" y="164" width="270" height="28" rx="4" fill="#134e4a"/>
+  <text x="366" y="185" fill="#ccfbf1" font-family="monospace" font-size="16">coding problem</text>
+  <text x="348" y="244" fill="#e5e5e5" font-family="monospace" font-size="22">fn main() {</text>
+  <text x="382" y="292" fill="#5eead4" font-family="monospace" font-size="22">let name = "Ferris";</text>
+  <text x="382" y="340" fill="#fbbf24" font-family="monospace" font-size="22">println!("Hello, {}", name);</text>
+  <text x="348" y="388" fill="#e5e5e5" font-family="monospace" font-size="22">}</text>
+  <rect x="348" y="454" width="498" height="56" rx="8" fill="#111827"/>
+  <text x="372" y="489" fill="#86efac" font-family="monospace" font-size="18">✓ output matched</text>
+  <rect x="348" y="542" width="156" height="46" rx="8" fill="#14b8a6"/>
+  <text x="382" y="571" fill="#042f2e" font-family="Arial" font-size="18" font-weight="700">Run code</text>
+</svg>
+`)}`;
+
+const practiceCards = [
+  {
+    label: "Read",
+    title: "Start with one idea",
+    copy: "Move through Rust in order, with each topic small enough to finish."
+  },
+  {
+    label: "Solve",
+    title: "Write real answers",
+    copy: "Practice coding prompts and check your thinking with focused MCQs."
+  },
+  {
+    label: "Return",
+    title: "Keep the thread",
+    copy: "Mark progress, revisit hard topics, and build momentum without guessing."
+  }
+];
 
 export default function HomePage() {
   return (
-    <main className="relative min-h-[calc(100vh-65px)] overflow-hidden bg-slate-950 text-white">
-      {/* Animated Background */}
-      <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900" />
-        <motion.div
-          className="absolute inset-0 bg-gradient-to-r from-teal-500/10 via-transparent to-amber-500/10"
-          animate={{
-            backgroundPosition: ["0% 0%", "100% 100%"],
-          }}
-          transition={{
-            duration: 20,
-            repeat: Infinity,
-            repeatType: "reverse",
-          }}
-          style={{
-            backgroundSize: "200% 200%",
-          }}
-        />
-        {/* Floating dots */}
-        <div className="absolute inset-0">
-          {[...Array(50)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute h-1 w-1 rounded-full bg-teal-400/20"
-              style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-              }}
-              animate={{
-                y: [0, -20, 0],
-                opacity: [0.2, 0.8, 0.2],
-              }}
-              transition={{
-                duration: 3 + Math.random() * 2,
-                repeat: Infinity,
-                delay: Math.random() * 2,
-              }}
-            />
-          ))}
-        </div>
-      </div>
+    <main className="relative overflow-hidden bg-[#050505] text-neutral-50">
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(120deg,#050505_0%,#0d0d0b_42%,#062d2b_100%)]" />
+      <div className="pointer-events-none absolute inset-0 opacity-30 [background-image:linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] [background-size:56px_56px]" />
 
-      <section className="relative mx-auto grid min-h-[calc(100vh-65px)] max-w-6xl gap-10 px-6 py-16 sm:px-8 lg:grid-cols-[minmax(0,1fr)_minmax(320px,0.8fr)] lg:items-center">
+      <section className="relative mx-auto grid min-h-[calc(100vh-65px)] max-w-7xl gap-10 px-6 pb-8 pt-16 sm:px-8 lg:grid-cols-[minmax(0,0.78fr)_minmax(420px,1fr)] lg:items-center lg:pt-10">
         <motion.div
-          initial={{ opacity: 0, y: 50 }}
+          initial={{ opacity: 0, y: 28 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
+          transition={{ duration: 0.7, ease: "easeOut" }}
+          className="relative z-10"
         >
-          <motion.p
-            className="font-mono text-sm uppercase tracking-[0.3em] text-teal-300"
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.2, duration: 0.6 }}
-          >
+          <p className="font-mono text-sm uppercase tracking-[0.3em] text-teal-200">
             BigRust
-          </motion.p>
-          <motion.h1
-            className="mt-5 max-w-4xl text-5xl font-bold tracking-tight sm:text-7xl"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4, duration: 0.8 }}
-          >
-            Learn Rust through a focused practice roadmap!
-          </motion.h1>
-          <motion.p
-            className="mt-6 max-w-2xl text-lg leading-8 text-slate-300"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6, duration: 0.8 }}
-          >
-            BigRust helps you move from Rust basics to advanced topics with a
-            guided track, coding problems, MCQs, difficulty labels, and progress
-            tracking so you always know what to study next.
-          </motion.p>
+          </p>
+          <h1 className="mt-5 max-w-4xl text-5xl font-bold tracking-tight text-white sm:text-7xl">
+            Build Rust confidence one focused session at a time.
+          </h1>
+          <p className="mt-6 max-w-2xl text-lg leading-8 text-neutral-300">
+            A steady path through ownership, borrowing, traits, lifetimes, and
+            the parts that usually make Rust feel bigger than it is.
+          </p>
 
-          <motion.div
-            className="mt-10 flex flex-wrap items-center gap-4"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.8, duration: 0.6 }}
-          >
-            <motion.div
-              whileHover={{ scale: 1.05, y: -2 }}
-              whileTap={{ scale: 0.95 }}
+          <div className="mt-9 flex flex-wrap items-center gap-4">
+            <Link
+              href="/topics"
+              className="rounded-lg bg-teal-300 px-6 py-4 text-sm font-bold text-black transition hover:bg-teal-200"
             >
-              <Link
-                href="/topics"
-                className="rounded-full bg-teal-300 px-7 py-4 text-sm font-bold text-slate-950 transition hover:bg-teal-200"
-              >
-                Get Started
-              </Link>
-            </motion.div>
-            <motion.p
-              className="text-sm text-slate-400"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 1, duration: 0.6 }}
+              Start the roadmap
+            </Link>
+            <Link
+              href="/mcqs"
+              className="rounded-lg border border-teal-200/35 bg-black/30 px-6 py-4 text-sm font-bold text-teal-100 transition hover:border-teal-100 hover:bg-teal-950/40"
             >
-              24 topics. Coding practice. MCQ checks. One learning path.
-            </motion.p>
-          </motion.div>
-        </motion.div>
+              Try MCQs
+            </Link>
+          </div>
 
-        <motion.aside
-          className="relative rounded-[2rem] border border-white/10 bg-white/10 p-6 shadow-2xl backdrop-blur"
-          initial={{ opacity: 0, x: 50 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.5, duration: 0.8 }}
-        >
-          <div className="absolute -right-12 -top-12 h-36 w-36 rounded-full bg-teal-300/30 blur-3xl" />
-          <div className="absolute -bottom-10 -left-10 h-32 w-32 rounded-full bg-amber-300/20 blur-3xl" />
-
-          <div className="relative space-y-4">
-            {[
-              "Follow the ordered Rust roadmap",
-              "Pick coding problems or MCQs per topic",
-              "Filter by difficulty as you practice",
-              "Track your progress locally"
-            ].map((item, index) => (
-              <motion.div
-                key={item}
-                className="rounded-2xl border border-white/10 bg-slate-900/80 p-4"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{
-                  delay: 0.7 + index * 0.1,
-                  duration: 0.6,
-                  ease: "easeOut"
-                }}
-                whileHover={{
-                  scale: 1.02,
-                  boxShadow: "0 10px 30px rgba(0,0,0,0.3)"
-                }}
+          <div className="mt-10 grid gap-3 sm:grid-cols-3">
+            {practiceCards.map((card) => (
+              <div
+                key={card.title}
+                className="rounded-lg border border-white/10 bg-black/30 p-4 backdrop-blur"
               >
-                <motion.p
-                  className="font-mono text-xs text-teal-200"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.8 + index * 0.1, duration: 0.4 }}
-                >
-                  Step {String(index + 1).padStart(2, "0")}
-                </motion.p>
-                <motion.p
-                  className="mt-2 text-lg font-semibold"
-                  initial={{ opacity: 0, x: 10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.9 + index * 0.1, duration: 0.5 }}
-                >
-                  {item}
-                </motion.p>
-              </motion.div>
+                <p className="font-mono text-xs uppercase tracking-[0.2em] text-amber-200">
+                  {card.label}
+                </p>
+                <h2 className="mt-3 text-lg font-bold text-white">{card.title}</h2>
+                <p className="mt-2 text-sm leading-6 text-neutral-300">
+                  {card.copy}
+                </p>
+              </div>
             ))}
           </div>
-        </motion.aside>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 36, rotateX: 8 }}
+          animate={{ opacity: 1, y: 0, rotateX: 0 }}
+          transition={{ delay: 0.2, duration: 0.8, ease: "easeOut" }}
+          className="relative z-10 mx-auto w-full max-w-2xl"
+        >
+          <div className="rounded-lg border border-teal-200/20 bg-black/45 p-3 shadow-[0_24px_90px_rgba(20,184,166,0.18)]">
+            <div className="rounded-lg border border-white/10 bg-[#0a0a0a] p-4">
+              <div className="mb-4 flex items-center justify-between gap-3">
+                <p className="font-mono text-xs uppercase tracking-[0.22em] text-teal-200">
+                  today&apos;s session
+                </p>
+                <span className="rounded-md bg-amber-300 px-2 py-1 font-mono text-xs font-bold text-black">
+                  24 topics
+                </span>
+              </div>
+              <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end">
+                <div>
+                  <h2 className="text-2xl font-bold text-white">
+                    Ownership warm-up
+                  </h2>
+                  <p className="mt-2 text-sm leading-6 text-neutral-300">
+                    Solve the prompt, run the Rust, then check the concept
+                    before moving on.
+                  </p>
+                </div>
+                <div className="rounded-lg border border-teal-300/20 bg-teal-300/10 px-4 py-3">
+                  <p className="font-mono text-xs text-teal-100">progress</p>
+                  <p className="mt-1 text-2xl font-bold text-white">07/24</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </motion.div>
       </section>
 
-      {/* MacBook Scroll Section */}
-      <MacbookScroll
-        title={
-          <span>
-            Master Rust Programming <br /> with Interactive Learning
-          </span>
-        }
-        src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAwIiBoZWlnaHQ9IjYwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImciIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPjxzdG9wIHN0b3AtY29sb3I9IiMxNzE3MTciIG9mZnNldD0iMCUiLz48c3RvcCBzdG9wLWNvbG9yPSIjMmQzZDM3IiBvZmZzZXQ9IjUwJSIvPjxzdG9wIHN0b3AtY29sb3I9IiMxNzE3MTciIG9mZnNldD0iMTAwJSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZykiLz48dGV4dCB4PSI1MCUiIHk9IjQwJSIgZm9udC1mYW1pbHk9Im1vbm9zcGFjZSIgZm9udC1zaXplPSIyNCIgZmlsbD0iI2ZmZmZmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSI+PGNvZGU+Zm4gbWFpbigpIHt9PC9jb2RlPjwvdGV4dD48L3N2Zz4="
-        showGradient={true}
-        badge={
-          <div className="rounded-full bg-teal-500 px-3 py-1 text-xs text-white">
-            🚀 Live Coding Environment
+      <section className="relative -mt-16 border-t border-white/10 bg-[linear-gradient(180deg,rgba(5,5,5,0)_0%,#050505_16%,#080806_100%)]">
+        <div className="mx-auto grid max-w-7xl gap-8 px-6 pt-16 sm:px-8 lg:grid-cols-[minmax(260px,0.45fr)_minmax(0,1fr)] lg:items-start">
+          <div className="relative z-10 lg:sticky lg:top-24">
+            <p className="font-mono text-sm uppercase tracking-[0.28em] text-amber-200">
+              practice loop
+            </p>
+            <h2 className="mt-4 text-4xl font-bold tracking-tight text-white">
+              The laptop opens into the work.
+            </h2>
+            <p className="mt-5 text-base leading-8 text-neutral-300">
+              Keep the lesson, editor, and questions in one rhythm: read the
+              idea, solve a prompt, then lock it in with quick checks.
+            </p>
+            <div className="mt-7 space-y-3">
+              {["Backend-fed questions", "Rust code practice", "MCQs by topic"].map(
+                (item) => (
+                  <div
+                    key={item}
+                    className="rounded-lg border border-white/10 bg-black/35 px-4 py-3 text-sm font-semibold text-neutral-100"
+                  >
+                    {item}
+                  </div>
+                )
+              )}
+            </div>
           </div>
-        }
-      />
+
+          <div className="relative -mt-36 min-h-[120vh] overflow-hidden">
+            <MacbookScroll
+              title={
+                <span>
+                  Open a topic. Write the Rust. <br /> Check the answer.
+                </span>
+              }
+              src={laptopScreen}
+              showGradient={false}
+              badge={
+                <div className="rounded-lg bg-teal-300 px-3 py-2 text-xs font-bold text-black">
+                  Live practice
+                </div>
+              }
+            />
+          </div>
+        </div>
+      </section>
+
+      <footer className="relative border-t border-white/10 bg-[#050505]">
+        <div className="mx-auto grid max-w-7xl gap-10 px-6 py-10 sm:px-8 md:grid-cols-[minmax(0,1fr)_auto] md:items-end">
+          <div>
+            <Link href="/" className="inline-flex items-center gap-3 text-lg font-bold text-white">
+              <span className="flex h-9 w-9 items-center justify-center rounded-lg border border-teal-200/25 bg-teal-300 font-mono text-sm text-black">
+                BR
+              </span>
+              <span>BigRust</span>
+            </Link>
+            <p className="mt-4 max-w-xl text-sm leading-6 text-neutral-400">
+              Practice Rust with a clear roadmap, backend-fed questions, coding
+              prompts, and topic-wise checks that keep each session moving.
+            </p>
+          </div>
+
+          <div className="flex flex-wrap gap-3">
+            <Link
+              href="/topics"
+              className="rounded-lg border border-white/10 bg-white/[0.03] px-4 py-2 text-sm font-semibold text-neutral-200 transition hover:border-teal-200/50 hover:text-teal-100"
+            >
+              Roadmap
+            </Link>
+            <Link
+              href="/mcqs"
+              className="rounded-lg border border-white/10 bg-white/[0.03] px-4 py-2 text-sm font-semibold text-neutral-200 transition hover:border-teal-200/50 hover:text-teal-100"
+            >
+              MCQs
+            </Link>
+          </div>
+        </div>
+        <div className="border-t border-white/10 px-6 py-5 sm:px-8">
+          <div className="mx-auto flex max-w-7xl flex-col gap-2 text-xs text-neutral-500 sm:flex-row sm:items-center sm:justify-between">
+            <p>Built for steady Rust practice.</p>
+            <p className="font-mono text-neutral-600">ownership / borrowing / traits / lifetimes</p>
+          </div>
+        </div>
+      </footer>
     </main>
   );
 }

@@ -3,6 +3,10 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
+import {
+  getBackendQuestionCounts,
+  type TopicQuestionCount
+} from "@/lib/backendQuestions";
 import type { getTopicSummaries } from "@/lib/problems";
 
 type RoadmapTopic = ReturnType<typeof getTopicSummaries>[number];
@@ -15,6 +19,8 @@ const storageKey = "bigrust-roadmap-progress";
 
 export function Roadmap({ topics }: RoadmapProps) {
   const [completedTopics, setCompletedTopics] = useState<string[]>([]);
+  const [questionCounts, setQuestionCounts] = useState<TopicQuestionCount[]>([]);
+  const [isLoadingCounts, setIsLoadingCounts] = useState(true);
 
   useEffect(() => {
     const savedProgress = window.localStorage.getItem(storageKey);
@@ -25,6 +31,36 @@ export function Roadmap({ topics }: RoadmapProps) {
         window.localStorage.removeItem(storageKey);
       }
     }
+  }, []);
+
+  useEffect(() => {
+    let isCurrent = true;
+
+    async function loadQuestionCounts() {
+      setIsLoadingCounts(true);
+
+      try {
+        const counts = await getBackendQuestionCounts();
+
+        if (isCurrent) {
+          setQuestionCounts(counts);
+        }
+      } catch {
+        if (isCurrent) {
+          setQuestionCounts([]);
+        }
+      } finally {
+        if (isCurrent) {
+          setIsLoadingCounts(false);
+        }
+      }
+    }
+
+    loadQuestionCounts();
+
+    return () => {
+      isCurrent = false;
+    };
   }, []);
 
   function toggleTopic(slug: string) {
@@ -67,6 +103,7 @@ export function Roadmap({ topics }: RoadmapProps) {
       <ol className="space-y-3">
         {topics.map((topic, index) => {
           const isComplete = completedTopics.includes(topic.slug);
+          const counts = questionCounts.find((count) => count.topic === topic.slug);
 
           return (
             <li
@@ -85,9 +122,14 @@ export function Roadmap({ topics }: RoadmapProps) {
                   {topic.title}
                 </Link>
                 <p className="mt-1 text-sm leading-6 text-slate-600">{topic.summary}</p>
-                <p className="mt-2 font-mono text-xs uppercase tracking-[0.2em] text-slate-400">
-                  {topic.count} coding questions + MCQs
-                </p>
+                {isLoadingCounts ? (
+                  <div className="mt-3 h-3 w-52 animate-pulse rounded bg-slate-200" />
+                ) : (
+                  <p className="mt-2 font-mono text-xs uppercase tracking-[0.2em] text-slate-400">
+                    {counts?.problemCount ?? 0} coding questions +{" "}
+                    {counts?.mcqCount ?? 0} MCQs
+                  </p>
+                )}
               </div>
 
               <button

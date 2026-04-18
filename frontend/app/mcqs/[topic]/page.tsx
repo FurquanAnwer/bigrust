@@ -1,8 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { McqCard } from "@/components/McqCard";
-import { getBackendMcqsByTopic } from "@/lib/backendQuestions";
+import { McqPracticeList } from "@/components/McqPracticeList";
 import { topics } from "@/lib/problems";
 import { getTopicBySlug } from "@/lib/topics";
 
@@ -19,7 +18,6 @@ export default async function McqTopicPage({ params }: McqTopicPageProps) {
     notFound();
   }
 
-  const topicMcqs = await getBackendMcqsByTopic(topic);
   const topicDetails = getTopicBySlug(topic);
 
   return (
@@ -41,11 +39,7 @@ export default async function McqTopicPage({ params }: McqTopicPageProps) {
         </p>
       </section>
 
-      <section className="space-y-5">
-        {topicMcqs.map((mcq, index) => (
-          <McqCard key={mcq.id} mcq={mcq} index={index} />
-        ))}
-      </section>
+      <McqPracticeList topic={topic} />
     </main>
   );
 }

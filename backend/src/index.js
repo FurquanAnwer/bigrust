@@ -25,6 +25,23 @@ app.get("/health", (_req, res) => {
   res.json({ ok: true });
 });
 
+app.get("/topics/question-counts", (_req, res) => {
+  const topicSlugs = Array.from(
+    new Set([
+      ...Object.keys(questionBank.problems ?? {}),
+      ...Object.keys(questionBank.mcqs ?? {})
+    ])
+  );
+
+  const counts = topicSlugs.map((topic) => ({
+    topic,
+    problemCount: questionBank.problems?.[topic]?.length ?? 0,
+    mcqCount: questionBank.mcqs?.[topic]?.length ?? 0
+  }));
+
+  return res.json({ counts });
+});
+
 app.get("/topics/:topic/problems", (req, res) => {
   const problems = questionBank.problems?.[req.params.topic];
 

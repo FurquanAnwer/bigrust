@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { getMcqsByTopic } from "@/lib/mcqs";
-import { getProblemsByTopic, topics } from "@/lib/problems";
+import { TopicPracticeOptions } from "@/components/TopicPracticeOptions";
+import { topics } from "@/lib/problems";
 import { getTopicBySlug } from "@/lib/topics";
 
 type TopicPageProps = {
@@ -19,8 +19,6 @@ export default async function TopicPage({ params }: TopicPageProps) {
   }
 
   const topicDetails = getTopicBySlug(topic);
-  const topicProblems = getProblemsByTopic(topic);
-  const topicMcqs = getMcqsByTopic(topic);
 
   return (
     <main className="mx-auto max-w-6xl px-6 py-10 sm:px-8">
@@ -41,43 +39,7 @@ export default async function TopicPage({ params }: TopicPageProps) {
         </p>
       </section>
 
-      <section className="grid gap-5 md:grid-cols-2">
-        <Link
-          href={`/topics/${topic}/problems`}
-          className="group rounded-[2rem] border border-slate-200 bg-white p-7 shadow-card transition hover:-translate-y-1 hover:border-teal-300"
-        >
-          <p className="font-mono text-xs uppercase tracking-[0.25em] text-teal-700">
-            Practice mode
-          </p>
-          <h2 className="mt-3 text-3xl font-bold text-slate-950">
-            Coding problems
-          </h2>
-          <p className="mt-4 text-sm leading-6 text-slate-600">
-            Open the ordered list of {topicProblems.length} coding questions,
-            then choose an individual problem to solve in the playground.
-          </p>
-          <span className="mt-6 inline-flex text-sm font-semibold text-teal-700 transition group-hover:translate-x-1">
-            View coding problems
-          </span>
-        </Link>
-
-        <Link
-          href={`/topics/${topic}/mcqs`}
-          className="group rounded-[2rem] border border-slate-200 bg-white p-7 shadow-card transition hover:-translate-y-1 hover:border-amber-300"
-        >
-          <p className="font-mono text-xs uppercase tracking-[0.25em] text-amber-700">
-            Concept check
-          </p>
-          <h2 className="mt-3 text-3xl font-bold text-slate-950">MCQs</h2>
-          <p className="mt-4 text-sm leading-6 text-slate-600">
-            Review the topic through {topicMcqs.length} multiple-choice
-            questions with difficulty labels and revealable answers.
-          </p>
-          <span className="mt-6 inline-flex text-sm font-semibold text-amber-700 transition group-hover:translate-x-1">
-            View MCQs
-          </span>
-        </Link>
-      </section>
+      <TopicPracticeOptions topic={topic} />
     </main>
   );
 }

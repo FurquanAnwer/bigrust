@@ -1,26 +1,81 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { McqCard } from "@/components/McqCard";
+import { QuestionLoading } from "@/components/QuestionLoading";
+import { getBackendMcqsByTopic } from "@/lib/backendQuestions";
 import type { Mcq } from "@/lib/mcqs";
 import type { Difficulty } from "@/lib/topics";
 
 type McqPracticeListProps = {
-  mcqs: Mcq[];
+  topic: string;
 };
 
 type DifficultyFilter = "All" | Difficulty;
 
 const difficultyFilters: DifficultyFilter[] = ["All", "Easy", "Medium", "Hard"];
 
-export function McqPracticeList({ mcqs }: McqPracticeListProps) {
+export function McqPracticeList({ topic }: McqPracticeListProps) {
   const [activeFilter, setActiveFilter] = useState<DifficultyFilter>("All");
+  const [mcqs, setMcqs] = useState<Mcq[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let isCurrent = true;
+
+    async function loadMcqs() {
+      setIsLoading(true);
+      setError(null);
+
+      try {
+        const nextMcqs = await getBackendMcqsByTopic(topic);
+
+        if (isCurrent) {
+          setMcqs(nextMcqs);
+        }
+      } catch (loadError) {
+        if (isCurrent) {
+          setError(
+            loadError instanceof Error
+              ? loadError.message
+              : "Unable to load MCQs."
+          );
+        }
+      } finally {
+        if (isCurrent) {
+          setIsLoading(false);
+        }
+      }
+    }
+
+    loadMcqs();
+
+    return () => {
+      isCurrent = false;
+    };
+  }, [topic]);
 
   const filteredMcqs =
     activeFilter === "All"
       ? mcqs
       : mcqs.filter((mcq) => mcq.difficulty === activeFilter);
+
+  if (isLoading) {
+    return <QuestionLoading label="Loading MCQs..." tone="amber" />;
+  }
+
+  if (error) {
+    return (
+      <section className="rounded-lg border border-rose-200 bg-white p-5 shadow-card">
+        <p className="text-sm font-semibold text-rose-700">
+          MCQs could not be loaded.
+        </p>
+        <p className="mt-2 text-sm text-slate-600">{error}</p>
+      </section>
+    );
+  }
 
   return (
     <section className="space-y-5">
@@ -53,6 +108,12 @@ export function McqPracticeList({ mcqs }: McqPracticeListProps) {
       </div>
 
       <div className="space-y-5">
+        {filteredMcqs.length === 0 ? (
+          <article className="rounded-lg border border-slate-200 bg-white p-5 text-sm text-slate-600 shadow-card">
+            No MCQs match this filter yet.
+          </article>
+        ) : null}
+
         {filteredMcqs.map((mcq, index) => (
           <McqCard key={mcq.id} mcq={mcq} index={index} />
         ))}
