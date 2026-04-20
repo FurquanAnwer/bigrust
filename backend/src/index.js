@@ -84,11 +84,17 @@ app.get("/problems/:id", (req, res) => {
 });
 
 app.post("/run", async (req, res) => {
-  const { code } = req.body ?? {};
+  const { code, stdin = "" } = req.body ?? {};
 
   if (!code || typeof code !== "string") {
     return res.status(400).json({
       error: "Rust code is required in the `code` field."
+    });
+  }
+
+  if (typeof stdin !== "string") {
+    return res.status(400).json({
+      error: "`stdin` must be a string when provided."
     });
   }
 
@@ -112,7 +118,8 @@ app.post("/run", async (req, res) => {
         headers,
         body: JSON.stringify({
           language_id: 73,
-          source_code: code
+          source_code: code,
+          stdin
         })
       }
     );

@@ -15,6 +15,19 @@ export type Problem = {
   difficulty: Difficulty;
   sampleInput: string;
   sampleOutput: string;
+  examples?: ProblemExample[];
+  testCases?: ProblemTestCase[];
+};
+
+export type ProblemExample = {
+  input: string;
+  output: string;
+  explanation?: string;
+};
+
+export type ProblemTestCase = {
+  input: string;
+  expectedOutput: string;
 };
 
 export const defaultRustCode = `fn main() {

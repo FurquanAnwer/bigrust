@@ -1,9 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import dynamic from "next/dynamic";
 
-import { defaultRustCode } from "@/lib/problems";
+import { getProblemTestCases } from "@/lib/problemExamples";
+import {
+  defaultRustCode,
+  type Problem,
+  type ProblemTestCase
+} from "@/lib/problems";
 
 const MonacoEditor = dynamic(() => import("@monaco-editor/react"), {
   ssr: false
@@ -15,60 +20,182 @@ type RunResponse = {
   compile_output?: string;
   error?: string;
   details?: string;
+  status?: string;
+  message?: string;
 };
 
 type CodePlaygroundProps = {
-  problemTitle: string;
+  problem: Problem;
+  totalProblemCount: number;
 };
 
-export function CodePlayground({ problemTitle }: CodePlaygroundProps) {
+type TestCaseResult = ProblemTestCase & {
+  actualOutput: string;
+  passed: boolean;
+  status?: string;
+  error?: string;
+};
+
+const storageKey = "bigrust-solved-problems";
+
+function normalizeOutput(output: string) {
+  return output.replace(/\r\n/g, "\n").trimEnd();
+}
+
+function isTestCaseResult(
+  testCase: ProblemTestCase | TestCaseResult
+): testCase is TestCaseResult {
+  return "passed" in testCase;
+}
+
+export function CodePlayground({
+  problem,
+  totalProblemCount
+}: CodePlaygroundProps) {
   const [code, setCode] = useState(defaultRustCode);
   const [result, setResult] = useState<RunResponse | null>(null);
+  const [testResults, setTestResults] = useState<TestCaseResult[]>([]);
   const [isRunning, setIsRunning] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [solvedProblemIds, setSolvedProblemIds] = useState<string[]>([]);
+  const [submitMessage, setSubmitMessage] = useState<string | null>(null);
   const [fontSize, setFontSize] = useState(14);
   const [theme, setTheme] = useState<"vs-dark" | "light">("vs-dark");
   const [wordWrap, setWordWrap] = useState<"on" | "off">("on");
   const [tabSize, setTabSize] = useState(4);
+  const testCases = useMemo(() => getProblemTestCases(problem), [problem]);
+  const isSolved = solvedProblemIds.includes(problem.id);
+  const passedCount = testResults.filter((testCase) => testCase.passed).length;
+  const allTestsPassed =
+    testResults.length > 0 && passedCount === testResults.length;
+
+  useEffect(() => {
+    const savedProgress = window.localStorage.getItem(storageKey);
+    if (savedProgress) {
+      try {
+        setSolvedProblemIds(JSON.parse(savedProgress) as string[]);
+      } catch {
+        window.localStorage.removeItem(storageKey);
+      }
+    }
+  }, []);
+
+  function markSolved() {
+    setSolvedProblemIds((current) => {
+      if (current.includes(problem.id)) {
+        return current;
+      }
+
+      const next = [...current, problem.id];
+      window.localStorage.setItem(storageKey, JSON.stringify(next));
+      return next;
+    });
+  }
 
   function resetEditor() {
     setCode(defaultRustCode);
     setResult(null);
+    setTestResults([]);
+    setSubmitMessage(null);
+  }
+
+  async function executeCode(stdin: string) {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:4000"}/run`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ code, stdin })
+      }
+    );
+
+    const data = (await response.json()) as RunResponse;
+
+    if (!response.ok) {
+      return {
+        error: data.error || "Something went wrong while running the code.",
+        details: data.details
+      };
+    }
+
+    return data;
+  }
+
+  async function runTests() {
+    setSubmitMessage(null);
+    setResult(null);
+    setTestResults([]);
+
+    try {
+      const nextResults: TestCaseResult[] = [];
+
+      for (const testCase of testCases) {
+        const data = await executeCode(testCase.input);
+        const actualOutput = data.stdout ?? "";
+        const hasRuntimeError =
+          Boolean(data.error) ||
+          Boolean(data.stderr) ||
+          Boolean(data.compile_output);
+        const passed =
+          !hasRuntimeError &&
+          normalizeOutput(actualOutput) ===
+            normalizeOutput(testCase.expectedOutput);
+
+        nextResults.push({
+          ...testCase,
+          actualOutput,
+          passed,
+          status: data.status,
+          error: data.error || data.stderr || data.compile_output
+        });
+
+        setTestResults([...nextResults]);
+        setResult(data);
+
+        if (hasRuntimeError) {
+          break;
+        }
+      }
+
+      return nextResults;
+    } catch (error) {
+      const nextError = {
+        error: "Unable to reach the backend.",
+        details: error instanceof Error ? error.message : "Unknown error"
+      };
+      setResult(nextError);
+      return [];
+    }
   }
 
   const runCode = async () => {
     setIsRunning(true);
-    setResult(null);
 
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:4000"}/run`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({ code })
-        }
-      );
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        setResult({
-          error: data.error || "Something went wrong while running the code.",
-          details: data.details
-        });
-        return;
-      }
-
-      setResult(data);
-    } catch (error) {
-      setResult({
-        error: "Unable to reach the backend.",
-        details: error instanceof Error ? error.message : "Unknown error"
-      });
+      await runTests();
     } finally {
       setIsRunning(false);
+    }
+  };
+
+  const submitSolution = async () => {
+    setIsSubmitting(true);
+
+    try {
+      const results = allTestsPassed ? testResults : await runTests();
+      const solvedNow =
+        results.length > 0 && results.every((testCase) => testCase.passed);
+
+      if (solvedNow) {
+        markSolved();
+        setSubmitMessage("Accepted. Progress updated.");
+      } else {
+        setSubmitMessage("Fix the failing tests, then submit again.");
+      }
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -81,7 +208,11 @@ export function CodePlayground({ problemTitle }: CodePlaygroundProps) {
             <h2 className="text-sm font-semibold text-slate-900">Code</h2>
           </div>
           <p className="mt-1 text-xs text-slate-500">
-            Rust solution for {problemTitle}
+            Rust solution for {problem.title}
+          </p>
+          <p className="mt-1 text-xs font-medium text-emerald-700">
+            {solvedProblemIds.length}/{totalProblemCount || "?"} solved
+            {isSolved ? " · current question solved" : ""}
           </p>
         </div>
 
@@ -96,6 +227,14 @@ export function CodePlayground({ problemTitle }: CodePlaygroundProps) {
           </button>
           <button
             type="button"
+            onClick={submitSolution}
+            disabled={isRunning || isSubmitting}
+            className="inline-flex items-center justify-center rounded-md bg-teal-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-teal-800 disabled:cursor-not-allowed disabled:bg-teal-300"
+          >
+            {isSubmitting ? "Submitting..." : "Submit"}
+          </button>
+          <button
+            type="button"
             onClick={resetEditor}
             className="inline-flex items-center justify-center rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-semibold text-slate-700 transition hover:border-slate-400"
           >
@@ -103,7 +242,11 @@ export function CodePlayground({ problemTitle }: CodePlaygroundProps) {
           </button>
           <button
             type="button"
-            onClick={() => setResult(null)}
+            onClick={() => {
+              setResult(null);
+              setTestResults([]);
+              setSubmitMessage(null);
+            }}
             className="inline-flex items-center justify-center rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-semibold text-slate-700 transition hover:border-slate-400"
           >
             Clear output
@@ -185,6 +328,119 @@ export function CodePlayground({ problemTitle }: CodePlaygroundProps) {
             automaticLayout: true
           }}
         />
+      </div>
+
+      <div className="max-h-80 overflow-auto border-t border-slate-200 bg-white p-4">
+        <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h3 className="text-sm font-semibold text-slate-950">
+              Test cases
+            </h3>
+            <p className="mt-1 text-xs text-slate-500">
+              Run or submit to compare stdout with the expected output.
+            </p>
+          </div>
+          {testResults.length > 0 ? (
+            <span
+              className={`rounded-md px-3 py-1 font-mono text-xs ${
+                allTestsPassed
+                  ? "bg-emerald-50 text-emerald-700"
+                  : "bg-rose-50 text-rose-700"
+              }`}
+            >
+              {passedCount}/{testResults.length} passed
+            </span>
+          ) : (
+            <span className="rounded-md bg-slate-100 px-3 py-1 font-mono text-xs text-slate-500">
+              {testCases.length} ready
+            </span>
+          )}
+        </div>
+
+        {submitMessage ? (
+          <p
+            className={`mb-3 rounded-md px-3 py-2 text-sm font-medium ${
+              allTestsPassed || isSolved
+                ? "bg-emerald-50 text-emerald-700"
+                : "bg-amber-50 text-amber-700"
+            }`}
+          >
+            {submitMessage}
+          </p>
+        ) : null}
+
+        <div className="space-y-3">
+          {(testResults.length > 0 ? testResults : testCases).map(
+            (testCase, index) => {
+              const resultForCase = isTestCaseResult(testCase)
+                ? testCase
+                : undefined;
+
+              return (
+                <div
+                  key={`${testCase.input}-${index}`}
+                  className="rounded-lg border border-slate-200 p-3"
+                >
+                  <div className="mb-3 flex items-center justify-between gap-3">
+                    <p className="text-sm font-semibold text-slate-900">
+                      Case {index + 1}
+                    </p>
+                    {resultForCase ? (
+                      <span
+                        className={`rounded-md px-2 py-1 font-mono text-xs ${
+                          resultForCase.passed
+                            ? "bg-emerald-50 text-emerald-700"
+                            : "bg-rose-50 text-rose-700"
+                        }`}
+                      >
+                        {resultForCase.passed ? "Passed" : "Failed"}
+                      </span>
+                    ) : (
+                      <span className="rounded-md bg-slate-100 px-2 py-1 font-mono text-xs text-slate-500">
+                        Not run
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="grid gap-3 text-sm md:grid-cols-3">
+                    <div>
+                      <p className="text-xs font-semibold uppercase text-slate-500">
+                        Input
+                      </p>
+                      <pre className="mt-1 max-h-28 overflow-auto rounded-md bg-slate-50 p-2 font-mono text-xs text-slate-700">
+                        {testCase.input || "(empty input)"}
+                      </pre>
+                    </div>
+                    <div>
+                      <p className="text-xs font-semibold uppercase text-slate-500">
+                        Expected
+                      </p>
+                      <pre className="mt-1 max-h-28 overflow-auto rounded-md bg-slate-50 p-2 font-mono text-xs text-emerald-700">
+                        {testCase.expectedOutput || "(empty output)"}
+                      </pre>
+                    </div>
+                    <div>
+                      <p className="text-xs font-semibold uppercase text-slate-500">
+                        Actual
+                      </p>
+                      <pre className="mt-1 max-h-28 overflow-auto rounded-md bg-slate-50 p-2 font-mono text-xs text-slate-700">
+                        {resultForCase
+                          ? resultForCase.actualOutput || "(empty output)"
+                          : "Run first"}
+                      </pre>
+                    </div>
+                  </div>
+
+                  {resultForCase?.error ? (
+                    <pre className="mt-3 whitespace-pre-wrap rounded-md bg-rose-50 p-2 font-mono text-xs text-rose-700">
+                      {resultForCase.error}
+                    </pre>
+                  ) : null}
+                </div>
+              );
+            }
+          )}
+        </div>
       </div>
 
       <div className="max-h-64 overflow-auto border-t border-slate-800 bg-zinc-950 p-4 font-mono text-sm text-slate-100">

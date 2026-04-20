@@ -5,7 +5,11 @@ import { useEffect, useState } from "react";
 
 import { CodePlayground } from "@/components/CodePlayground";
 import { QuestionLoading } from "@/components/QuestionLoading";
-import { getBackendProblemById } from "@/lib/backendQuestions";
+import {
+  getBackendProblemById,
+  getBackendQuestionCounts
+} from "@/lib/backendQuestions";
+import { getProblemExamples } from "@/lib/problemExamples";
 import type { Problem } from "@/lib/problems";
 
 type ProblemWorkspaceProps = {
@@ -14,6 +18,7 @@ type ProblemWorkspaceProps = {
 
 export function ProblemWorkspace({ problemId }: ProblemWorkspaceProps) {
   const [problem, setProblem] = useState<Problem | null>(null);
+  const [totalProblemCount, setTotalProblemCount] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -25,10 +30,19 @@ export function ProblemWorkspace({ problemId }: ProblemWorkspaceProps) {
       setError(null);
 
       try {
-        const nextProblem = await getBackendProblemById(problemId);
+        const [nextProblem, questionCounts] = await Promise.all([
+          getBackendProblemById(problemId),
+          getBackendQuestionCounts()
+        ]);
 
         if (isCurrent) {
           setProblem(nextProblem);
+          setTotalProblemCount(
+            questionCounts.reduce(
+              (total, count) => total + count.problemCount,
+              0
+            )
+          );
         }
       } catch (loadError) {
         if (isCurrent) {
@@ -83,6 +97,8 @@ export function ProblemWorkspace({ problemId }: ProblemWorkspaceProps) {
     );
   }
 
+  const examples = getProblemExamples(problem);
+
   return (
     <main className="min-h-[calc(100vh-65px)] bg-slate-100">
       <div className="border-b border-slate-200 bg-white px-4 py-3">
@@ -122,29 +138,51 @@ export function ProblemWorkspace({ problemId }: ProblemWorkspaceProps) {
               {problem.description}
             </p>
 
-            <div className="mt-8 space-y-4">
-              <div>
-                <h2 className="text-sm font-semibold text-slate-950">
-                  Example input
-                </h2>
-                <pre className="mt-2 rounded-lg border border-slate-200 bg-slate-50 p-4 font-mono text-sm text-slate-800">
-                  {problem.sampleInput || "(empty input)"}
-                </pre>
-              </div>
-
-              <div>
-                <h2 className="text-sm font-semibold text-slate-950">
-                  Expected output
-                </h2>
-                <pre className="mt-2 rounded-lg border border-slate-200 bg-slate-50 p-4 font-mono text-sm text-emerald-700">
-                  {problem.sampleOutput}
-                </pre>
-              </div>
+            <div className="mt-8 space-y-5">
+              <h2 className="text-lg font-semibold text-slate-950">
+                Examples
+              </h2>
+              {examples.map((example, index) => (
+                <div
+                  key={`${example.input}-${index}`}
+                  className="rounded-lg border border-slate-200 bg-slate-50 p-4"
+                >
+                  <h3 className="text-sm font-semibold text-slate-950">
+                    Example {index + 1}
+                  </h3>
+                  <div className="mt-3 grid gap-3">
+                    <div>
+                      <p className="text-xs font-semibold uppercase text-slate-500">
+                        Input
+                      </p>
+                      <pre className="mt-1 overflow-auto rounded-md border border-slate-200 bg-white p-3 font-mono text-sm text-slate-800">
+                        {example.input || "(empty input)"}
+                      </pre>
+                    </div>
+                    <div>
+                      <p className="text-xs font-semibold uppercase text-slate-500">
+                        Output
+                      </p>
+                      <pre className="mt-1 overflow-auto rounded-md border border-slate-200 bg-white p-3 font-mono text-sm text-emerald-700">
+                        {example.output || "(empty output)"}
+                      </pre>
+                    </div>
+                    {example.explanation ? (
+                      <p className="text-sm leading-6 text-slate-600">
+                        {example.explanation}
+                      </p>
+                    ) : null}
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </article>
 
-        <CodePlayground problemTitle={problem.title} />
+        <CodePlayground
+          problem={problem}
+          totalProblemCount={totalProblemCount}
+        />
       </section>
     </main>
   );
