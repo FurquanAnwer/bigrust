@@ -42,6 +42,22 @@ function normalizeOutput(output: string) {
   return output.replace(/\r\n/g, "\n").trimEnd();
 }
 
+function formatElapsedTime(totalSeconds: number) {
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+
+  if (hours > 0) {
+    return [hours, minutes, seconds]
+      .map((value) => String(value).padStart(2, "0"))
+      .join(":");
+  }
+
+  return [minutes, seconds]
+    .map((value) => String(value).padStart(2, "0"))
+    .join(":");
+}
+
 function isTestCaseResult(
   testCase: ProblemTestCase | TestCaseResult
 ): testCase is TestCaseResult {
@@ -63,11 +79,14 @@ export function CodePlayground({
   const [theme, setTheme] = useState<"vs-dark" | "light">("vs-dark");
   const [wordWrap, setWordWrap] = useState<"on" | "off">("on");
   const [tabSize, setTabSize] = useState(4);
+  const [elapsedSeconds, setElapsedSeconds] = useState(0);
+  const [isTimerRunning, setIsTimerRunning] = useState(false);
   const testCases = useMemo(() => getProblemTestCases(problem), [problem]);
   const isSolved = solvedProblemIds.includes(problem.id);
   const passedCount = testResults.filter((testCase) => testCase.passed).length;
   const allTestsPassed =
     testResults.length > 0 && passedCount === testResults.length;
+  const formattedElapsedTime = formatElapsedTime(elapsedSeconds);
 
   useEffect(() => {
     const savedProgress = window.localStorage.getItem(storageKey);
@@ -79,6 +98,23 @@ export function CodePlayground({
       }
     }
   }, []);
+
+  useEffect(() => {
+    setElapsedSeconds(0);
+    setIsTimerRunning(false);
+  }, [problem.id]);
+
+  useEffect(() => {
+    if (!isTimerRunning) {
+      return;
+    }
+
+    const timer = window.setInterval(() => {
+      setElapsedSeconds((seconds) => seconds + 1);
+    }, 1000);
+
+    return () => window.clearInterval(timer);
+  }, [isTimerRunning]);
 
   function markSolved() {
     setSolvedProblemIds((current) => {
@@ -235,13 +271,6 @@ export function CodePlayground({
           </button>
           <button
             type="button"
-            onClick={resetEditor}
-            className="inline-flex items-center justify-center rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-semibold text-slate-700 transition hover:border-slate-400"
-          >
-            Reset
-          </button>
-          <button
-            type="button"
             onClick={() => {
               setResult(null);
               setTestResults([]);
@@ -255,6 +284,77 @@ export function CodePlayground({
       </div>
 
       <div className="flex flex-wrap items-center gap-3 border-b border-slate-200 bg-slate-50 px-4 py-2">
+        <div className="inline-flex items-center gap-2 rounded-md border border-slate-300 bg-white px-2.5 py-1 text-sm font-semibold text-slate-700">
+          <button
+            type="button"
+            onClick={() => setIsTimerRunning(true)}
+            aria-label="Run timer"
+            className={`inline-flex h-6 w-6 items-center justify-center rounded-full transition ${
+              isTimerRunning
+                ? "bg-emerald-600 text-white"
+                : "bg-slate-50 text-slate-600 hover:text-emerald-700"
+            }`}
+          >
+            <svg
+              aria-hidden="true"
+              className="h-3 w-3"
+              fill="currentColor"
+              viewBox="0 0 16 16"
+            >
+              <path d="M4.5 3.2v9.6c0 .4.5.7.8.4l7.2-4.8c.3-.2.3-.6 0-.8L5.3 2.8c-.3-.2-.8 0-.8.4Z" />
+            </svg>
+          </button>
+          <button
+            type="button"
+            onClick={() => setIsTimerRunning(false)}
+            aria-label="Pause timer"
+            className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-slate-50 text-slate-600 transition hover:text-amber-700"
+          >
+            <svg
+              aria-hidden="true"
+              className="h-3 w-3"
+              fill="currentColor"
+              viewBox="0 0 16 16"
+            >
+              <path d="M4 3.5c0-.3.2-.5.5-.5h2c.3 0 .5.2.5.5v9c0 .3-.2.5-.5.5h-2a.5.5 0 0 1-.5-.5v-9Zm5 0c0-.3.2-.5.5-.5h2c.3 0 .5.2.5.5v9c0 .3-.2.5-.5.5h-2a.5.5 0 0 1-.5-.5v-9Z" />
+            </svg>
+          </button>
+          <span className="font-mono text-xs tabular-nums">
+            {formattedElapsedTime}
+          </span>
+          <button
+            type="button"
+            onClick={() => {
+              setElapsedSeconds(0);
+              setIsTimerRunning(false);
+            }}
+            aria-label="Reset timer"
+            className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-slate-50 text-slate-600 transition hover:text-rose-700"
+          >
+            <svg
+              aria-hidden="true"
+              className="h-3 w-3"
+              fill="none"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="1.8"
+              viewBox="0 0 16 16"
+            >
+              <path d="M12.7 6.2A5 5 0 1 1 11 3.9" />
+              <path d="M12.7 2.5v3.7H9" />
+            </svg>
+          </button>
+        </div>
+
+        <button
+          type="button"
+          onClick={resetEditor}
+          className="inline-flex items-center justify-center rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm font-semibold text-slate-700 transition hover:border-slate-400"
+        >
+          Reset
+        </button>
+
         <label className="flex items-center gap-2 text-sm font-medium text-slate-700">
           Font
           <button
