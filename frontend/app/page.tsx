@@ -88,6 +88,12 @@ export default function HomePage() {
             >
               Try MCQs
             </Link>
+            <Link
+              href="/rust-playground"
+              className="rounded-lg border border-teal-200/35 bg-teal-400 px-6 py-4 text-sm font-bold text-slate-950 transition hover:bg-teal-300"
+            >
+              Open Rust playground
+            </Link>
           </div>
 
           <div className="mt-10 grid gap-3 sm:grid-cols-3">
