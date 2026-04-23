@@ -15,6 +15,7 @@ export type Problem = {
   difficulty: Difficulty;
   sampleInput: string;
   sampleOutput: string;
+  starterCode: string;
   examples?: ProblemExample[];
   testCases?: ProblemTestCase[];
 };

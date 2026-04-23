@@ -3,8 +3,6 @@
 import { useState } from "react";
 import dynamic from "next/dynamic";
 
-import { defaultRustCode } from "@/lib/problems";
-
 const MonacoEditor = dynamic(() => import("@monaco-editor/react"), {
   ssr: false
 });
@@ -25,7 +23,7 @@ const starterCode = `fn main() {
 }`;
 
 export function RustPlayground() {
-  const [code, setCode] = useState(starterCode || defaultRustCode);
+  const [code, setCode] = useState(starterCode);
   const [stdin, setStdin] = useState("");
   const [result, setResult] = useState<RunResponse | null>(null);
   const [isRunning, setIsRunning] = useState(false);

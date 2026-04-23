@@ -5,7 +5,6 @@ import dynamic from "next/dynamic";
 
 import { getProblemTestCases } from "@/lib/problemExamples";
 import {
-  defaultRustCode,
   type Problem,
   type ProblemTestCase
 } from "@/lib/problems";
@@ -68,7 +67,7 @@ export function CodePlayground({
   problem,
   totalProblemCount
 }: CodePlaygroundProps) {
-  const [code, setCode] = useState(defaultRustCode);
+  const [code, setCode] = useState(problem.starterCode);
   const [result, setResult] = useState<RunResponse | null>(null);
   const [testResults, setTestResults] = useState<TestCaseResult[]>([]);
   const [isRunning, setIsRunning] = useState(false);
@@ -129,7 +128,7 @@ export function CodePlayground({
   }
 
   function resetEditor() {
-    setCode(defaultRustCode);
+    setCode(problem.starterCode);
     setResult(null);
     setTestResults([]);
     setSubmitMessage(null);
@@ -417,7 +416,7 @@ export function CodePlayground({
           height="100%"
           defaultLanguage="rust"
           value={code}
-          onChange={(value) => setCode(value ?? defaultRustCode)}
+          onChange={(value) => setCode(value ?? problem.starterCode)}
           theme={theme}
           options={{
             minimap: { enabled: false },
