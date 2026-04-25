@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+import { AuthButton } from "@/components/AuthButton";
+
 export function NavBar() {
   const pathname = usePathname();
   const isLandingPage = pathname === "/";
@@ -61,16 +63,19 @@ export function NavBar() {
           </Link>
         </div>
 
-        <Link
-          href="/topics"
-          className={
-            isLandingPage
-              ? "rounded-lg border border-teal-200/30 bg-teal-300 px-4 py-2 text-sm font-bold text-black transition hover:bg-teal-200"
-              : "rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-bold text-slate-700 transition hover:border-teal-300 hover:text-teal-700"
-          }
-        >
-          Start
-        </Link>
+        <div className="flex items-center gap-3">
+          <Link
+            href="/topics"
+            className={
+              isLandingPage
+                ? "hidden rounded-lg border border-teal-200/30 bg-teal-300 px-4 py-2 text-sm font-bold text-black transition hover:bg-teal-200 sm:inline-flex"
+                : "hidden rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-bold text-slate-700 transition hover:border-teal-300 hover:text-teal-700 sm:inline-flex"
+            }
+          >
+            Start
+          </Link>
+          <AuthButton isLandingPage={isLandingPage} />
+        </div>
       </nav>
     </header>
   );
