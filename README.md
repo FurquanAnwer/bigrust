@@ -1,110 +1,102 @@
 # Rust Practice App
 
-A minimal full-stack web app for practicing Rust coding problems.
+A single Next.js full-stack learning app for practicing Rust problems and MCQs.
 
 ## Stack
 
-- Frontend: Next.js (App Router), React, Tailwind CSS, Monaco Editor
-- Backend: Node.js, Express
+- Frontend + backend: Next.js App Router
 - Auth: Google OAuth with NextAuth
-- Database: PostgreSQL with Prisma ORM
+- Database: PostgreSQL with Prisma
 - Code execution: Judge0 API
+- Question data: `bigrust/interviewQuestions.json`
 
 ## Project structure
 
+The active app is inside `bigrust/bigrust/`.
+
 ```text
 .
-├── backend
-│   ├── package.json
-│   └── src
-│       └── index.js
-└── frontend
-    ├── app
-    ├── components
-    ├── lib
-    └── package.json
+└── bigrust/
+    ├── app/
+    │   └── api/
+    │       ├── auth/[...nextauth]/route.ts
+    │       ├── run/route.ts
+    │       ├── health/route.ts
+    │       ├── problems/[id]/route.ts
+    │       └── topics/
+    │           ├── question-counts/route.ts
+    │           └── [topic]/
+    │               ├── mcqs/route.ts
+    │               └── problems/route.ts
+    ├── components/
+    ├── lib/
+    ├── prisma/
+    ├── interviewQuestions.json
+    ├── package.json
+    ├── next.config.js
+    ├── tsconfig.json
+    └── .env.local.example
 ```
 
 ## Run locally
 
-### 1. Install dependencies
+From the repo root:
 
 ```bash
-cd backend
+cd bigrust/bigrust
 npm install
 ```
 
-```bash
-cd frontend
-npm install
-```
-
-### 2. Configure environment variables
-
-Backend:
+Copy the example env file:
 
 ```bash
-cd backend
-cp .env.example .env
-```
-
-Frontend:
-
-```bash
-cd frontend
 cp .env.local.example .env.local
 ```
 
-The defaults already point to a local backend and the public Judge0 CE API.
+Start the app:
 
-For Google sign-in, create an OAuth client in Google Cloud Console and add:
+```bash
+npm run dev
+```
+
+The app runs on `http://localhost:3000`.
+
+## Database setup
+
+From `bigrust/bigrust`:
+
+```bash
+npm run db:generate
+npm run db:migrate
+```
+
+## Environment variables
+
+Update `bigrust/bigrust/.env.local` with at least:
+
+- `DATABASE_URL`
+- `NEXTAUTH_SECRET`
+- `GOOGLE_CLIENT_ID`
+- `GOOGLE_CLIENT_SECRET`
+
+For Google OAuth, add this redirect URI in Google Cloud Console:
 
 ```text
 http://localhost:3000/api/auth/callback/google
 ```
 
-as an authorized redirect URI. Then set `DATABASE_URL`, `NEXTAUTH_SECRET`,
-`GOOGLE_CLIENT_ID`, and `GOOGLE_CLIENT_SECRET` in `frontend/.env.local`.
-
-Run the Prisma migration before starting the frontend:
-
-```bash
-cd frontend
-npm run db:migrate
-```
-
-If you want to use RapidAPI-hosted Judge0 instead, set `JUDGE0_API_URL`, `JUDGE0_API_KEY`, and `JUDGE0_API_HOST` in `backend/.env`.
-
-### 3. Start the backend
-
-```bash
-cd backend
-npm run dev
-```
-
-Backend runs on `http://localhost:4000`.
-
-### 4. Start the frontend
-
-```bash
-cd frontend
-npm run dev
-```
-
-Frontend runs on `http://localhost:3000`.
-
 ## Features
 
-- Google OAuth sign-in
-- User, account, and session storage in PostgreSQL through Prisma
-- Hardcoded Rust practice problems
-- Problem list and detail pages
-- Monaco editor with Rust mode
-- Run button wired to the backend
-- Console-style output for `stdout`, `stderr`, and compile errors
-- Loading state and basic error handling
+- Single Next.js app with integrated API routes
+- Google sign-in via NextAuth
+- PostgreSQL-backed Prisma user/session storage
+- Rust problem and MCQ practice
+- Monaco editor with Rust coding experience
+- Code execution through Judge0 API
+- API routes under `app/api/`
 
 ## Notes
 
-- Problems are stored in `frontend/lib/problems.ts`
-- The backend exposes `POST /run`
+- The backend is now fully integrated into Next.js, so there is no separate Express backend.
+- Question data is stored in `bigrust/bigrust/interviewQuestions.json`.
+- The runner endpoint is `app/api/run/route.ts`.
