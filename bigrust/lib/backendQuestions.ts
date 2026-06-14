@@ -2,10 +2,12 @@ import type { Mcq } from "@/lib/mcqs";
 import type { Problem } from "@/lib/problems";
 import { getTopicBySlug, roadmapTopics } from "@/lib/topics";
 
-const apiUrl =
+const rawApiUrl =
   process.env.NEXT_PUBLIC_API_BASE_URL ??
   process.env.NEXT_PUBLIC_API_URL ??
-  "http://localhost:4000";
+  "/api";
+
+const apiUrl = rawApiUrl.includes("localhost:4000") ? "/api" : rawApiUrl;
 
 type BackendProblem = Omit<Problem, "topic" | "topicTitle">;
 type BackendMcq = Omit<Mcq, "topic" | "topicTitle">;
